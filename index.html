@@ -84,7 +84,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 110px 0 20px 0; /* 固定ヘッダー分の余白を確保 */
+            padding: 130px 0 20px 0; /* 上部の固定ヘッダー分の余白を確保 */
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -100,7 +100,7 @@
             border-left: 5px solid #3498db;
             padding-left: 10px;
             margin-top: 0;
-            scroll-margin-top: 80px;
+            scroll-margin-top: 90px;
         }
 
         h3 {
@@ -109,7 +109,7 @@
             margin-bottom: 10px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 5px;
-            scroll-margin-top: 80px;
+            scroll-margin-top: 90px;
         }
 
         /* ==========================================================================
@@ -119,7 +119,7 @@
             background-color: #3498db;
             color: #ffffff;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-            padding: 25px 30px;
+            padding: 35px 30px; /* 一番上のときは太め（厚みを持たせる） */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -134,7 +134,7 @@
 
         .site-header h1 {
             margin: 0;
-            font-size: 28px;
+            font-size: 34px; /* 一番上のときのタイトル文字サイズ */
             font-weight: bold;
             color: #ffffff;
             text-align: left;
@@ -414,7 +414,7 @@
             margin-bottom: 30px;
             border-radius: 8px;
             box-shadow: var(--shadow);
-            scroll-margin-top: 80px;
+            scroll-margin-top: 90px;
             transition: background 0.3s ease;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -778,11 +778,11 @@
            ========================================================================== */
         @media (max-width: 768px) {
             .site-header {
-                padding: 15px 15px;
+                padding: 20px 15px;
             }
 
             .site-header h1 {
-                font-size: 18px;
+                font-size: 20px;
             }
 
             .site-header.scrolled h1 {
