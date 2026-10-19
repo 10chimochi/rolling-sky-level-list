@@ -755,18 +755,28 @@
             .site-header {
                 flex-direction: column;
                 align-items: center;
-                padding: 25px 15px;
+                /* スマホ表示時に右側にボタン用の余白（70px）を確保する */
+                padding: 20px 75px 20px 15px;
                 gap: 15px;
             }
 
             .site-header h1 {
-                font-size: 22px;
+                font-size: 20px;
                 text-align: center;
             }
 
             .header-controls {
                 justify-content: center;
                 width: 100%;
+            }
+
+            /* スマホ時もボタンを画面固定(追従)させつつ、サイズを少しコンパクトにして被りを防止 */
+            .menu-toggle-btn {
+                position: fixed;
+                top: 15px;
+                right: 15px;
+                width: 48px;
+                height: 48px;
             }
 
             .control-panel {
