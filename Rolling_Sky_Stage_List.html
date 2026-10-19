@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="doc-title">Rolling Sky Level List</title>
+
+    <!-- ==========================================================================
+       ファビコン設定 (Rolling_Sky_title_logo.ico)
+       ========================================================================== -->
+    <link rel="icon" href="Rolling_Sky_title_logo.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="Rolling_Sky_title_logo.ico" type="image/x-icon">
+
+    <style>
+        /* ==========================================================================
+           1. CSS変数（ライト／ダークテーマ定義）
+           ========================================================================== */
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #333333;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --input-border: #cbd5e1;
+            --header-text: #2c3e50;
+            --sub-header-text: #2980b9;
+            --btn-bg: #e2e8f0;
+            --btn-text: #475569;
+            --btn-hover: #cbd5e1;
+            --table-odd-bg: #f8fafc;
+            --hover-bg: #e2e8f0;
+            --del-color: #888888;
+            --removed-color: #7f8c8d;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+            /* クリア済み行のカラー定義 */
+            --cleared-bg: #e8f5e9;
+            --cleared-text: #2e7d32;
+
+            --toggle-bg: rgba(255, 255, 255, 0.3);
+            --toggle-handle: #ffffff;
+            --toggle-text: #ffffff;
+
+            /* プログレスバー用変数 */
+            --progress-bg: #e2e8f0;
+            --progress-fill: #27ae60;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121824;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --input-border: #475569;
+            --header-text: #f1f5f9;
+            --sub-header-text: #38bdf8;
+            --btn-bg: #334155;
+            --btn-text: #cbd5e1;
+            --btn-hover: #475569;
+            --table-odd-bg: #182232;
+            --hover-bg: #2d3748;
+            --del-color: #94a3b8;
+            --removed-color: #a0aec0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+            /* ダークモード時のクリア済み行カラー */
+            --cleared-bg: #1b382b;
+            --cleared-text: #81c784;
+
+            --toggle-bg: #1e293b;
+            --toggle-handle: #38bdf8;
+            --toggle-text: #ffffff;
+
+            --progress-bg: #334155;
+            --progress-fill: #34d399;
+        }
+
+        /* ==========================================================================
+           2. 基本要素 & レイアウト
+           ========================================================================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0 0 20px 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: var(--header-text);
+            border-left: 5px solid #3498db;
+            padding-left: 10px;
+            margin-top: 0;
+            scroll-margin-top: 20px;
+        }
+
+        h3 {
+            color: var(--sub-header-text);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+            scroll-margin-top: 20px;
+        }
+
+        /* ==========================================================================
+           3. ヘッダー (Site Header)
+           ========================================================================== */
+        .site-header {
+            background-color: #3498db;
+            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+            padding: 45px 80px 45px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .site-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* ==========================================================================
+           4. コントロールパーツ（検索・ボタン・トグル・プログレスバー）
+           ========================================================================== */
+        .control-panel {
+            background: var(--card-bg);
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: background 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box input[type="text"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid var(--input-border);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.3s ease, color 0.3s ease, box-shadow 0.2s ease;
+        }
+
+        .search-box input[type="text"]:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .reset-btn, .clear-checks-btn {
+            padding: 10px 16px;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+        }
+
+        .reset-btn:hover, .clear-checks-btn:hover {
+            background-color: var(--btn-hover);
+            transform: translateY(-1px);
+        }
+
+        .clear-checks-btn {
+            background-color: #e74c3c;
+            color: #ffffff;
+        }
+
+        .clear-checks-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* プログレスバーウィジェット */
+        .progress-widget {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-top: 5px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .progress-title {
+            color: var(--header-text);
+        }
+
+        .progress-stats {
+            color: var(--text-muted);
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--progress-bg);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--progress-fill);
+            border-radius: 5px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+        }
+
+        .lang-select {
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.3s ease, color 0.3s ease;
+        }
+
+        .lang-select:focus {
+            border-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .lang-select option {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        /* トグルスイッチ */
+        .toggle-switch {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            width: 80px;
+            height: 34px;
+            background-color: var(--toggle-bg);
+            border-radius: 20px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+            padding: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 28px;
+            height: 28px;
+            background-color: var(--toggle-handle);
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-label {
+            width: 100%;
+            text-align: right;
+            padding-right: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--toggle-text);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .theme-toggle-switch .toggle-slider {
+            transform: translateX(46px);
+        }
+
+        [data-theme="dark"] .theme-toggle-switch .toggle-label {
+            text-align: left;
+            padding-right: 0;
+            padding-left: 10px;
+        }
+
+        /* ==========================================================================
+           5. タブ (Tab Container) & アニメーション
+           ========================================================================== */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--text-muted);
+            background: var(--btn-bg);
+            border: none;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: var(--btn-hover);
+            color: var(--text-color);
+        }
+
+        .tab-btn.active {
+            background: #3498db;
+            color: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           6. テーブル (Table & Grid Styles)
+           ========================================================================== */
+        .table-section {
+            background: var(--card-bg);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            scroll-margin-top: 20px;
+            transition: background 0.3s ease;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        th, td {
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: middle;
+            transition: background-color 0.2s ease, border-color 0.3s ease, color 0.2s ease;
+            white-space: nowrap;
+            line-height: 1.6;
+        }
+
+        th:first-child, td:first-child {
+            border-left: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #2980b9;
+            color: white;
+            text-align: center;
+            font-size: 13px;
+            border-top: 1px solid #2980b9;
+        }
+
+        th.plus-header { background-color: #1a5276; border-top: 2px solid #2c3e50; }
+        .th-cocreation { background-color: #27ae60; border-top-color: #27ae60; }
+        .th-cocreation.plus-header { background-color: #1e8449; border-top: 2px solid #114b29; }
+        .th-fanmade { background-color: #d35400; border-top-color: #d35400; }
+        .th-fanmade.plus-header { background-color: #a04000; border-top: 2px solid #5c2400; }
+        .th-event { background-color: #8e44ad; border-top-color: #8e44ad; }
+        th.group-main { background-color: #2980b9; }
+        th.group-bonus1 { background-color: #8e44ad; }
+        th.group-bonus2 { background-color: #d35400; }
+
+        tr.category-header-row td {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 12px 14px;
+            text-align: left;
+            border-top: 3px solid #2c3e50;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        tr.category-header-row td::after {
+            content: ' ▼';
+            float: right;
+            font-size: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        tr.category-header-row.collapsed td::after {
+            content: ' ▲';
+        }
+
+        tr.cat-main td { background-color: #2980b9; }
+        tr.cat-mini td { background-color: #16a085; }
+        tr.cat-event td { background-color: #8e44ad; }
+        tr.cat-fanmade td { background-color: #d35400; }
+        tr.cat-cocreation td { background-color: #27ae60; }
+
+        tbody tr:nth-child(odd) {
+            background-color: var(--table-odd-bg);
+        }
+
+        /* クリア状況チェックボックス & クリア完了行のスタイル */
+        .clear-checkbox {
+            margin-right: 6px;
+            cursor: pointer;
+            accent-color: #27ae60;
+            width: 14px;
+            height: 14px;
+            vertical-align: middle;
+        }
+
+        .stage-item {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .stage-item.cleared .stage-link,
+        .stage-item.cleared strong {
+            color: var(--cleared-text);
+            font-weight: bold;
+        }
+
+        .stage-link {
+            color: var(--sub-header-text);
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .stage-link:hover {
+            color: #c0392b;
+            background-color: rgba(52, 152, 219, 0.15);
+        }
+
+        del {
+            text-decoration: line-through;
+            color: var(--del-color);
+        }
+
+        .plain-removed {
+            font-size: 11px;
+            color: var(--removed-color);
+            font-weight: normal;
+            margin-left: 3px;
+        }
+
+        .highlight td, td.highlight-cell, tr.highlight-cell td {
+            background-color: #ffeaa7 !important;
+            color: #2c3e50 !important;
+            font-weight: bold;
+        }
+
+        .search-match {
+            background-color: #fef08a !important;
+            color: #854d0e !important;
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
+        .plain-diff {
+            font-size: 12px;
+        }
+
+        /* ==========================================================================
+           7. ナビゲーションドロワー & 固定操作ボタン
+           ========================================================================== */
+        .menu-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: #2980b9;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .menu-toggle-btn .menu-icon {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .menu-toggle-btn .menu-text {
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        .menu-toggle-btn:hover {
+            background-color: #1a5276;
+            transform: scale(1.05);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .drawer-nav {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 270px;
+            height: 100%;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            z-index: 1002;
+            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+            padding: 25px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .drawer-nav.active {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 10px;
+        }
+
+        .drawer-header h4 {
+            margin: 0;
+            color: var(--header-text);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .drawer-menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .drawer-menu-list li {
+            margin: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .drawer-menu-list a {
+            display: block;
+            padding: 10px 12px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s ease, padding-left 0.2s ease, background-color 0.2s ease;
+        }
+
+        .drawer-menu-list a.nav-parent {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--header-text);
+            background-color: var(--hover-bg);
+            padding: 12px 10px;
+        }
+
+        .drawer-menu-list a.nav-sub {
+            padding-left: 22px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .drawer-menu-list a:hover {
+            color: #3498db;
+            padding-left: 26px;
+        }
+
+        .drawer-theme-box {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-theme-box span {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--header-text);
+        }
+
+        .drawer-theme-box .lang-select {
+            border: 1px solid var(--input-border);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .drawer-theme-box .toggle-switch {
+            background-color: var(--input-border);
+            border: none;
+        }
+
+        .back-to-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #2c3e50;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .back-to-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top-btn:hover {
+            background-color: #3498db;
+            transform: scale(1.08);
+        }
+
+        .back-to-top-btn .arrow {
+            font-size: 14px;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .back-to-top-btn .text {
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        /* ==========================================================================
+           8. レスポンシブ対応 (Mobile Styles)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .site-header {
+                flex-direction: column;
+                align-items: center;
+                padding: 25px 15px;
+                gap: 15px;
+            }
+
+            .site-header h1 {
+                font-size: 22px;
+                text-align: center;
+            }
+
+            .header-controls {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .control-panel {
+                padding: 12px;
+            }
+
+            .tab-btn {
+                padding: 10px 14px;
+                font-size: 13px;
+                flex: 1;
+                text-align: center;
+            }
+
+            .table-section {
+                padding: 12px;
+            }
+
+            th, td {
+                padding: 6px 6px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- サイトヘッダー                                                           -->
+<!-- ----------------------------------------------------------------------- -->
+<header class="site-header">
+    <h1 id="main-title">Rolling Sky Level List</h1>
+    <div class="header-controls">
+        <select class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="zh-CN">简体中文</option>
+            <option value="zh-TW">繁体中文</option>
+            <option value="ko">한국어</option>
+        </select>
+
+        <label class="toggle-switch theme-toggle-switch" title="Theme Switch">
+            <input type="checkbox" class="theme-toggle-checkbox" onchange="toggleTheme()">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label theme-toggle-label">Light</span>
+        </label>
+    </div>
+</header>
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- 固定配置コントロール（メニューボタン＆ページ先頭へボタン）            -->
+<!-- ----------------------------------------------------------------------- -->
+<button class="menu-toggle-btn" id="menuToggleBtn" aria-label="メニューを開く">
+    <span class="menu-icon">☰</span>
+    <span class="menu-text">MENU</span>
+</button>
+<button class="back-to-top-btn" id="backToTopBtn" aria-label="ページの先頭に戻る" onclick="scrollToTop()">
+    <span class="arrow">▲</span>
+    <span class="text">TOP</span>
+</button>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- ハンバーガーメニュー                                               -->
+<!-- ----------------------------------------------------------------------- -->
+<nav class="drawer-nav" id="drawerNav">
+    <div class="drawer-header">
+        <h4 data-i18n="menu_title">Menu</h4>
+        <button class="close-btn" id="closeMenuBtn">&times;</button>
+    </div>
+
+    <ul class="drawer-menu-list">
+        <li><a href="javascript:void(0)" class="nav-parent" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_by_difficulty">By Difficulty</a></li>
+        <li><a href="#diff-sec-main" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_official_levels">Official Levels</a></li>
+        <li><a href="#diff-sec-event" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_event_levels">Event Levels</a></li>
+        <li><a href="#diff-sec-fanmade" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_fanmade">Fanmade</a></li>
+        <li><a href="#diff-sec-cocreation" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_cocreation">Co-creation</a></li>
+
+        <li><a href="javascript:void(0)" class="nav-parent" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_all_levels">All Levels</a></li>
+        <li><a href="#all-sec-main" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_official_levels">Official Levels</a></li>
+        <li><a href="#all-sec-mini" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_mini_levels">Mini Levels</a></li>
+        <li><a href="#all-sec-event" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_event_levels">Event Levels</a></li>
+        <li><a href="#all-sec-fanmade" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_fanmade">Fanmade</a></li>
+        <li><a href="#all-sec-cocreation" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_cocreation">Co-creation</a></li>
+    </ul>
+
+    <!-- ドロワー内コントロール -->
+    <div class="drawer-theme-box">
+        <span data-i18n="language_label">Language</span>
+        <select class="lang-select" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="zh-CN">简体中文</option>
+	    <option value="zh-TW">繁体中文</option>
+            <option value="ko">한국어</option>
+        </select>
+    </div>
+
+    <div class="drawer-theme-box">
+        <span data-i18n="dark_mode_label">Dark Mode</span>
+        <label class="toggle-switch theme-toggle-switch" title="Theme Switch">
+            <input type="checkbox" class="theme-toggle-checkbox" onchange="toggleTheme()">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label theme-toggle-label">Light</span>
+        </label>
+    </div>
+</nav>
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- メインコンテンツエリア                                                   -->
+<!-- ----------------------------------------------------------------------- -->
+<div class="container">
+
+    <!-- 検索バー ＆ チェック一括解除ボタン ＆ プログレスバー -->
+    <div class="control-panel">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search stage name..." oninput="handleSearch()">
+            <button class="reset-btn" onclick="resetSearch()" data-i18n="reset_btn">Clear Search</button>
+            <button class="clear-checks-btn" onclick="removeAllClearChecks()" data-i18n="clear_checks_btn">Clear Checks</button>
+        </div>
+
+        <!-- クリア進捗プログレスバー -->
+        <div class="progress-widget">
+            <div class="progress-info">
+                <span class="progress-title" data-i18n="progress_title">Total Clear Progress</span>
+                <span class="progress-stats" id="progressStats">0 / 0 (0%)</span>
+            </div>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- タブ切り替えボタン -->
+    <div class="tab-container">
+        <button class="tab-btn active" id="tab-btn-by-diff" onclick="switchTab('sec-by-difficulty')">By Difficulty</button>
+        <button class="tab-btn" id="tab-btn-all" onclick="switchTab('sec-all-levels')">All Levels</button>
+    </div>
+
+    <!-- TAB 1: 難易度順一覧 (By Difficulty) -->
+    <div class="tab-content active" id="sec-by-difficulty">
+        <div class="table-section">
+            <h2 id="heading-by-diff">By Difficulty</h2>
+            
+            <h3 id="diff-sec-main" data-i18n="diff_official_levels">Official Levels</h3>
+            <table>
+                <thead>
+                    <tr><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th><th>★6</th></tr>
+                </thead>
+                <tbody id="diff-tbody-main"></tbody>
+            </table>
+
+            <h3 id="diff-sec-event" data-i18n="diff_event_levels">Event Levels</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="th-event">😄1</th><th class="th-event">😄2</th><th class="th-event">😄3</th>
+                        <th class="th-event">😄4</th><th class="th-event">😄5</th><th class="th-event">😄6</th>
+                    </tr>
+                </thead>
+                <tbody id="diff-tbody-event"></tbody>
+            </table>
+
+            <h3 id="diff-sec-fanmade" data-i18n="diff_fanmade">Fanmade</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="th-fanmade">★1</th><th class="th-fanmade">★2</th><th class="th-fanmade">★3</th>
+                        <th class="th-fanmade">★4</th><th class="th-fanmade">★5</th><th class="th-fanmade">★6</th>
+                    </tr>
+                </thead>
+                <tbody id="diff-tbody-fanmade"></tbody>
+            </table>
+
+            <h3 id="diff-sec-cocreation" data-i18n="diff_cocreation">Co-creation</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="th-cocreation">★1</th><th class="th-cocreation">★2</th><th class="th-cocreation">★3</th>
+                        <th class="th-cocreation">★4</th><th class="th-cocreation">★5</th><th class="th-cocreation">★6</th>
+                    </tr>
+                </thead>
+                <tbody id="diff-tbody-cocreation"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 2: 全ステージ一覧 (All Levels) -->
+    <div class="tab-content" id="sec-all-levels">
+        <div class="table-section">
+            <h2 id="heading-all-levels">All Levels</h2>
+            <table id="levels-table">
+                <thead>
+                    <tr>
+                        <th class="group-main">No</th>
+                        <th class="group-main" data-i18n="col_stage_name">Stage Name</th>
+                        <th class="group-main" data-i18n="col_difficulty">Difficulty</th>
+                        <th class="group-bonus1">Bonus No</th>
+                        <th class="group-bonus1" data-i18n="col_stage_name">Stage Name</th>
+                        <th class="group-bonus1" data-i18n="col_difficulty">Difficulty</th>
+                        <th class="group-bonus2">Bonus No</th>
+                        <th class="group-bonus2" data-i18n="col_stage_name">Stage Name</th>
+                        <th class="group-bonus2" data-i18n="col_difficulty">Difficulty</th>
+                    </tr>
+                </thead>
+                <tbody id="levels-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- JavaScript                                                              -->
+<!-- ----------------------------------------------------------------------- -->
+<script>
+    /* ==========================================================================
+       1. 多言語対応（i18n）＆ 定数定義
+       ========================================================================== */
+    const i18nData = {
+        en: {
+            title: "Rolling Sky Level List", by_difficulty: "By Difficulty", all_levels: "All Levels",
+            official_levels: "Official Levels", event_levels: "Event Levels", mini_levels: "Mini Levels",
+            fanmade: "Fanmade", cocreation: "Co-creation", stage_name: "Stage Name", difficulty: "Difficulty",
+            search_placeholder: "Search level name", clear_btn: "Clear Search", clear_checks_btn: "Clear Checks",
+            menu_title: "Menu", language: "Language", dark_mode: "Dark Mode", no_stages: "（No matching stages）",
+            confirm_clear_all: "Are you sure you want to uncheck all cleared stages?",
+            progress_title: "Total Clear Progress"
+        },
+        ja: {
+            title: "ローリングスカイ ステージ一覧", by_difficulty: "難易度順一覧", all_levels: "全一覧",
+            official_levels: "公式ステージ", event_levels: "イベントステージ", mini_levels: "ミニステージ",
+            fanmade: "ファンメイド", cocreation: "共創", stage_name: "ステージ名", difficulty: "難易度",
+            search_placeholder: "ステージ名を入力して検索", clear_btn: "検索クリア", clear_checks_btn: "チェック全解除",
+            menu_title: "メニュー", language: "言語", dark_mode: "ダークモード", no_stages: "（該当ステージなし）",
+            confirm_clear_all: "すべてのクリアチェックを解除しますか？",
+            progress_title: "全体クリア進捗"
+        },
+        "zh-CN": {
+             title: "滚动的天空 关卡目录", by_difficulty: "难度排序", all_levels: "全部关卡",
+             official_levels: "官方关卡", event_levels: "活动关卡", mini_levels: "迷你关卡",
+             fanmade: "饭製", cocreation: "共创", stage_name: "关卡名称", difficulty: "难度",
+             search_placeholder: "输入关卡名称搜索", clear_btn: "清除搜索", clear_checks_btn: "清除所有勾选",
+             menu_title: "菜单", language: "语言", dark_mode: "深色模式", no_stages: "（无符合条件的关卡）",
+             confirm_clear_all: "确定要取消所有已通关的勾选吗",
+             progress_title: "总通关进度"
+        },
+        "zh-TW": {
+             title: "滾動的天空 關卡目錄", by_difficulty: "難度排序", all_levels: "全部關卡",
+             official_levels: "官方關卡", event_levels: "活動關卡", mini_levels: "迷你關卡",
+             fanmade: "飯製", cocreation: "共創", stage_name: "關卡名稱", difficulty: "難度",
+             search_placeholder: "輸入關卡名稱搜索", clear_btn: "清除搜索", clear_checks_btn: "清除所有勾選",
+             menu_title: "菜單", language: "語言", dark_mode: "深色模式", no_stages: "（無符合條件的關卡）",
+             confirm_clear_all: "確定要取消所有已通關的勾選嗎",
+             progress_title: "總通關進度"
+        },
+        ko: {
+             title: "Rolling Sky Level List", by_difficulty: "By Difficulty", all_levels: "All Levels",
+            official_levels: "Official Levels", event_levels: "Event Levels", mini_levels: "Mini Levels",
+            fanmade: "Fanmade", cocreation: "Co-creation", stage_name: "Stage Name", difficulty: "Difficulty",
+            search_placeholder: "Search level name", clear_btn: "Clear Search", clear_checks_btn: "Clear Checks",
+            menu_title: "Menu", language: "Language", dark_mode: "Dark Mode", no_stages: "（No matching stages）",
+            confirm_clear_all: "Are you sure you want to uncheck all cleared stages?",
+            progress_title: "Total Clear Progress"
+        }
+    };
+
+    const deletedStages = new Set(["Alone", "Alone Remix", "Faded", "Faded Remix", "Alone II", "The Spectre", "The Spectre Remix"]);
+
+    /* ==========================================================================
+       2. クリア状況（localStorage）の保持・管理ロジック ＆ プログレス更新
+       ========================================================================== */
+    let clearedStagesSet = new Set(JSON.parse(localStorage.getItem('clearedStages') || '[]'));
+    let totalValidStagesCount = 0; // 全有効ステージ数（動的集計）
+
+    function updateProgressBar() {
+        const total = totalValidStagesCount > 0 ? totalValidStagesCount : 1;
+        
+        // 削除済みステージを除外してクリア数をカウント
+        let clearedValidCount = 0;
+        clearedStagesSet.forEach(sName => {
+            if (!deletedStages.has(sName)) {
+                clearedValidCount++;
+            }
+        });
+
+        const percentage = Math.min(100, Math.max(0, Math.round((clearedValidCount / total) * 100)));
+        
+        document.getElementById('progressBarFill').style.width = percentage + '%';
+        document.getElementById('progressStats').innerText = `${clearedValidCount} / ${total} (${percentage}%)`;
+    }
+
+    function toggleClearStage(stageName, isChecked) {
+        if (isChecked) {
+            clearedStagesSet.add(stageName);
+        } else {
+            clearedStagesSet.delete(stageName);
+        }
+        localStorage.setItem('clearedStages', JSON.stringify(Array.from(clearedStagesSet)));
+        
+        // 同一ステージのすべての要素の表示状態を更新
+        const stageId = createId(stageName);
+        document.querySelectorAll(`.stage-item-wrapper-${stageId}`).forEach(wrapper => {
+            const cb = wrapper.querySelector('.clear-checkbox');
+            if (cb) cb.checked = isChecked;
+            if (isChecked) wrapper.classList.add('cleared');
+            else wrapper.classList.remove('cleared');
+        });
+
+        updateProgressBar();
+    }
+
+    // チェックボックスを一括解除（確認用ポップアップ付き）
+    function removeAllClearChecks() {
+        const dict = i18nData[currentLang] || i18nData['en'];
+        if (clearedStagesSet.size === 0) return;
+
+        if (confirm(dict.confirm_clear_all)) {
+            clearedStagesSet.clear();
+            localStorage.removeItem('clearedStages');
+
+            document.querySelectorAll('.clear-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+
+            document.querySelectorAll('.stage-item').forEach(wrapper => {
+                wrapper.classList.remove('cleared');
+            });
+
+            updateProgressBar();
+        }
+    }
+
+    /* ==========================================================================
+       3. データソース定義 (By Difficulty / All Levels)
+       ========================================================================== */
+    const byDifficultyExactData = {
+        "Official Levels": {
+            "normal": {
+                1: ["Cloud (A)", "Sunny (A)", "Cloud (B)", "Hoop Dream (A)", "Tropical Tides (A)", "Sweet Paradise", "Massif (A)", "Starfield", "The Winter", "Massif (B)", "Tsunami", "Sunny (B)"],
+                2: ["Sky", "Massif (C)", "Wilderness Aftertaste", "Laser", "Mental Rave", "Fairy Tale", "Illusion (C)", "Snowy Night", "Delusion Circle", "Faster", "Halloween Escape", "Golden Christmas", "Cubic Craft", "Temple Fair", "8Bits"],
+                3: ["Buoyancy Field", "Stars (B)", "Time Machine", "Accumulator", "Gemini", "Sea World", "Romantic Afternoon", "Forest (A)", "Monody (A)", "Mysterious Trail", "Forest (B)", "Totem", "Championship", "Fortification Zero", "Fireworks", "Crisscross", "Convection Domain", "Ghost Dance", "Trick or Treat", "Desert"],
+                4: ["Volcano", "Christmas Gospel", "Storms & Love", "Monody (B)", "Westland", "Battle Bastion", "Delicacy Temptation", "Dynamic Cube", "Foggy City", "Alien Remnants", "Ghroth", "Palace Ruins", "Goblin Town (A)", "Aurora Tour", "Digital Matrix", "Reflection Corridor", "Goblin Town (B)", "Ignite", "Kingdom War", "VR Fairyland", "Twinkling"],
+                5: ["Legendary Racing", "Passionate Love", "Monster City", "Chronos", "Birthday Party", "Kepler's Dream", "Enchanted Lamp", "Mecha", "Toy Blocks", "Chess Fortress", "The Sea", "Spring Festival", "Fission", "Egypt", "Amusement Park", "Halloween", "Castle in the Sky", "Microchip", "Emerald City", "Mechanical Power", "Dino Disco (B)"],
+                6: ["The Wizard of Oz", "Psychedelic Music", "1UP", "Red Empire", "MotiF-east", "Halloween Night", "New Year", "Happy", "World Cup", "Extraterrestrial Duel", "Sunset Sword Tomb", "Magic House", "Competition Park", "Pipeline"]
+            },
+            "plus": {
+                1: ["Illusion (A)", "Hoop Dream (B)", "Tropical Tides (B)", "Venus", "Skeleton Party", "Cobweb", "The Eye of Horus", "Atomic Energy", "Illusion (B)", "Jack-O'-Lantern", "Eternity", "Space Station", "Clown Park", "Workshop", "DelighT-une"],
+                2: ["Stars (A)", "Djinni", "Falling Blossoms", "JOKER", "Desolate Area", "Eternal Journey", "Dazzle", "Samba", "The Shadow Warrior", "Martial World", "Football Field"],
+                3: ["Candy", "Otherworld", "Kung Fu", "Rainbow Castle", "Pirate Ship", "Midnight-Go-Round", "Abyss Trap", "Iron Tide", "The Brazil Carnival", "Tactic Core", "Collapsed Stage", "Game Zone", "Moonlight Swordsman", "Unlock the Future", "Canyon Encounters", "Matrix", "Fantastic Sweet House", "Phantom", "Anniversary", "Departure Prelude", "Revival"],
+                4: ["City", "Sci-Tech", "Chieftain", "Wasteland Wildsands", "Interstellae Leap", "Tetris", "Circus", "Reggae", "Blazing Tracks", "Navel Battle", "Dino Disco (A)", "Morning Dawn", "Relics", "Varying Christmas", "Lost City", "Street Basketball", "The Day of the Dead", "Sunset Glow", "Monster Chorus", "Hub", "Zone 22"],
+                5: ["Rhythm Party", "Flower Dance", "Future Stronghold", "Industrial Base", "Cthulhu", "Reindeer's Gift", "Poker", "Grotesque Playhouse", "Deep Space", "Midnight Carnival", "Ghost Samurai", "Mirrorworld", "E-labyrinth", "Christmas", "Dinosaur Valley", "Horizon Cruise", "Neon", "American Football", "Steam Era", "Phantom Thief", "Robotoy", "Cube", "Unending Voyage"],
+                6: ["Nirvana", "Happy Birthday", "Lov-E", "The 4th Anniversary", "Auspicious Jade Rabbit", "Our Story Onwards", "TiMe-mory"]
+            }
+        },
+        "Event Levels": {
+            "normal": { 1: ["Cloud Fools' Day"], 2: [], 3: ["Diamond Craft"], 4: ["sparT ssybA"], 5: [], 6: ["Diagonal Cup"] },
+            "plus": { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] }
+        },
+        "Fanmade": {
+            "normal": { 1: [], 2: [], 3: ["Successful Person", "Earth Core Adventure"], 4: ["Eclipse"], 5: [], 6: ["Cave", "The Chaos", "Virtual Futuristic Network"] },
+            "plus": { 1: [], 2: [], 3: [], 4: ["The Frozen Winter"], 5: ["The Breezy Summer", "The Basketball"], 6: ["A Dream of 7 Years"] }
+        },
+        "Co-creation": {
+            "normal": { 1: [], 2: ["Masked Ball", "Kaleidoscope"], 3: ["Observatory", "Parade Pageantry", "Firefly Valley", "Furnace", "Out of Control", "Axolo-Waltz"], 4: ["Lively Spirits", "Harmonic Streets", "Biology Lab", "Disco Tempo", "Twilignt Karst Cave", "Cat Tale"], 5: ["Jungle Expending", "Starlight Desert", "Fruity Paradise", "NEWBORN", "Polar Exprolation"], 6: ["Lab -CONFIDENTIAL-", "Knit Kingdom", "City of Tomorrow"] },
+            "plus": { 1: [], 2: ["Crescent Moonbeam", "Heartbreak", "Lighthouse Alley"], 3: ["Mutation Crisis", "Tribal Hunting", "Moonlit Night Movement", "Sewing Factory", "Sugarfall", "Breaking", "Sunshine Ocean", "Breach Harbour", "Celestial Vault"], 4: ["Beach Party-Rock", "Industrial Age", "Shining Waves", "Polar Night Wandering", "Cometbound", "Meow Meow"], 5: ["Bouncing City", "Melodic Metropolis", "Musical Theatre", "Nuclear Energy", "Radiant Shadow"], 6: ["Trailblaze"] }
+        }
+    };
+
+    const plusStagesSet = new Set();
+    Object.values(byDifficultyExactData).forEach(catObj => {
+        if (catObj.plus) {
+            Object.values(catObj.plus).forEach(arr => {
+                arr.forEach(sName => plusStagesSet.add(sName.trim()));
+            });
+        }
+    });
+
+    const allLevelsMergedRowsData = [
+        {"m_no": "Level 0A\nLevel 0B", "m_name": "Cloud (A)\nCloud (B)", "m_diff": "★1\n★1", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 1A\nLevel 1B\nLevel 1C", "m_name": "Massif (A)\nMassif (B)\nMassif (C)", "m_diff": "★1\n★1\n★2", "b1_no": "Bonus 1A\nBonus 1B\nBonus 1C", "b1_name": "Illusion (A)\nIllusion (B)\nIllusion (C)", "b1_diff": "★1\n★1\n★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 2", "m_name": "Sky", "m_diff": "★2", "m_rowspan": 2, "b1_no": "Bonus 2A\nBonus 2B", "b1_name": "Monody (A)\nMonody (B)", "b1_diff": "★3\n★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "", "m_name": "", "m_diff": "", "m_rowspan": 0, "b1_no": "Bonus 3", "b1_name": "Candy", "b1_diff": "★3", "b2_no": "Bonus 47", "b2_name": "Sweet Paradise", "b2_diff": "★1"},
+        {"m_no": "Level 3", "m_name": "Forest (B)", "m_diff": "★3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 4", "m_name": "Desert", "m_diff": "★3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 5", "m_name": "Volcano", "m_diff": "★4", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 6", "m_name": "City", "m_diff": "★4", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 7", "m_name": "Sci-Tech", "m_diff": "★4", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 8", "m_name": "Tetris", "m_diff": "★4", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 9", "m_name": "E-labyrinth", "m_diff": "★5", "b1_no": "Bonus 44", "b1_name": "Mysterious Trail", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 10", "m_name": "Castle in the Sky", "m_diff": "★5", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 11", "m_name": "Halloween", "m_diff": "★5", "b1_no": "Bonus 51", "b1_name": "Jack-O'-Lantern", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 12", "m_name": "Ghost Dance", "m_diff": "★3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 13", "m_name": "Deep Space", "m_diff": "★5", "b1_no": "Bonus 45", "b1_name": "Starfield", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 14", "m_name": "Christmas", "m_diff": "★5", "b1_no": "Bonus 52", "b1_name": "Snowy Night", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 15", "m_name": "Kung Fu", "m_diff": "★3", "b1_no": "Bonus 83", "b1_name": "Martial World", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 16", "m_name": "1UP", "m_diff": "★6", "b1_no": "Bonus 4", "b1_name": "8Bits", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 17", "m_name": "Cube", "m_diff": "★5", "b1_no": "Bonus 5", "b1_name": "Matrix", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 18", "m_name": "Poker", "m_diff": "★5", "b1_no": "Bonus 6", "b1_name": "JOKER", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 19", "m_name": "Raggae", "m_diff": "★4", "b1_no": "Bonus 7", "b1_name": "Mental Rave", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 20", "m_name": "Relics", "m_diff": "★4", "b1_no": "Bonus 8", "b1_name": "Fairy Tale", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 21", "m_name": "Street Basketball", "m_diff": "★4", "b1_no": "Bonus 10A\nBonus 10B", "b1_name": "Hoop Dream (A)\nHoop Dream (B)", "b1_diff": "★1\n★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 22", "m_name": "Midnight Carnival", "m_diff": "★5", "b1_no": "Bonus 9", "b1_name": "Halloween Escape", "b1_diff": "★2", "b2_no": "Bonus 49", "b2_name": "Cobweb", "b2_diff": "★1"},
+        {"m_no": "Level 23", "m_name": "Ignite", "m_diff": "★4", "b1_no": "Bonus 12", "b1_name": "Laser", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 24", "m_name": "Varying Christmas", "m_diff": "★4", "b1_no": "Bonus 11", "b1_name": "The Winter", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 25", "m_name": "Neon", "m_diff": "★5", "b1_no": "Bonus 13", "b1_name": "Dazzle", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 26", "m_name": "Egypt", "m_diff": "★5", "b1_no": "Bonus 14", "b1_name": "The Eye of Horus", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 27", "m_name": "Circus", "m_diff": "★5", "b1_no": "Bonus 15", "b1_name": "Clown Park", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 28", "m_name": "World Cup", "m_diff": "★6", "b1_no": "Bonus 16", "b1_name": "Football Field", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 29", "m_name": "Alone", "m_diff": "", "b1_no": "Bonus 17", "b1_name": "Alone Remix", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 30", "m_name": "Faded", "m_diff": "", "b1_no": "Bonus 18", "b1_name": "Faded Remix", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 31", "m_name": "Happy Birthday", "m_diff": "★6", "b1_no": "Bonus 19", "b1_name": "Anniversary", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 32", "m_name": "Halloween Night", "m_diff": "★6", "b1_no": "Bonus 20", "b1_name": "Skeleton Party", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 33", "m_name": "Faster", "m_diff": "★2", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 34", "m_name": "Golden Christmas", "m_diff": "★2", "b1_no": "Bonus 21", "b1_name": "Christmas Gospel", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 35", "m_name": "Alone II", "m_diff": "", "b1_no": "Bonus 22", "b1_name": "Lost City", "b1_diff": "★4", "b2_no": "Bonus 54", "b2_name": "Venus", "b2_diff": "★1"},
+        {"m_no": "Level 36", "m_name": "Spring Festival", "m_diff": "★5", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 37", "m_name": "The Spectre", "m_diff": "", "b1_no": "Bonus 23", "b1_name": "The Spectre Remix", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 38", "m_name": "American Football", "m_diff": "★5", "b1_no": "Bonus 24", "b1_name": "Championship", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 39", "m_name": "Naval Battle", "m_diff": "★4", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 40", "m_name": "Microchip", "m_diff": "★5", "b1_no": "Bonus 25", "b1_name": "Digital Matrix", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 41", "m_name": "Dynamic Cube", "m_diff": "★4", "b1_no": "Bonus 26A\nBonus 26B", "b1_name": "Sunny (A)\nSunny (B)", "b1_diff": "★1\n★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 42", "m_name": "VR Fairyland", "m_diff": "★4", "b1_no": "Bonus 27", "b1_name": "Unlock the Future", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 43", "m_name": "Psychedelic Music", "m_diff": "★6", "b1_no": "Bonus 28", "b1_name": "Rhythm Party", "b1_diff": "★5", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 44", "m_name": "The 4th Anniversary", "m_diff": "★6", "b1_no": "Bonus 29", "b1_name": "Birthday Party", "b1_diff": "★5", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 45", "m_name": "Monster Chorus", "m_diff": "★4", "b1_no": "Bonus 30", "b1_name": "Trick or Treat", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 46", "m_name": "Sunset Glow", "m_diff": "★4", "b1_no": "Bonus 31", "b1_name": "Morning Dawn", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 47", "m_name": "Reindeers' Gift", "m_diff": "★5", "b1_no": "Bonus 32", "b1_name": "Aurora Tour", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 48", "m_name": "Kepler's Dream", "m_diff": "★5", "b1_no": "Bonus 33A\nBonus 33B", "b1_name": "Stars (A)\nStars (B)", "b1_diff": "★2\n★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 49", "m_name": "Delicacy Temptetion", "m_diff": "★4", "b1_no": "Bonus 34", "b1_name": "Fantastic Sweet House", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 50", "m_name": "The Sea", "m_diff": "★5", "b1_no": "Bonus 35", "b1_name": "SeaWorld", "b1_diff": "★3", "b2_no": "Bonus 39", "b2_name": "Tsunami", "b2_diff": "★1"},
+        {"m_no": "Level 51", "m_name": "Steam Era", "m_diff": "★5", "b1_no": "Bonus 36", "b1_name": "Mechanical Power", "b1_diff": "★5", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 52", "m_name": "Ghost Samurai", "m_diff": "★5", "b1_no": "Bonus 37", "b1_name": "The Shadow Warrior", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 53", "m_name": "Monster City", "m_diff": "★5", "b1_no": "Bonus 38A\nBonus 38B", "b1_name": "Goblin Town (A)\nGoblin Town (B)", "b1_diff": "★4\n★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 54", "m_name": "Auspicious Jade Rabbit", "m_diff": "★6", "b1_no": "Bonus 40", "b1_name": "Temple Fair", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 55", "m_name": "Horizon Cruise", "m_diff": "★5", "b1_no": "Bonus 41", "b1_name": "Interstella Leap", "b1_diff": "★4", "b2_no": "Bonus 58", "b2_name": "Space Station", "b2_diff": "★1"},
+        {"m_no": "Level 56", "m_name": "Chess Fortress", "m_diff": "★5", "b1_no": "Bonus 42", "b1_name": "Crisscross", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 57", "m_name": "Dinosaur Valley", "m_diff": "★5", "b1_no": "Bonus 43A\nBonus 43B", "b1_name": "Dino Disco (A)\nDino Disco (B)", "b1_diff": "★4\n★5", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 58A\nLevel 58B", "m_name": "Storms & Love\nLov-E", "m_diff": "★4\n★6", "b1_no": "Bonus 46", "b1_name": "Eternal Journey", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 59", "m_name": "Flower Dance", "m_diff": "★5", "b1_no": "Bonus 48", "b1_name": "Falling Blossoms", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 60", "m_name": "The Day of the Dead", "m_diff": "★4", "b1_no": "Bonus 50", "b1_name": "Otherworld", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 61", "m_name": "Mecha", "m_diff": "★5", "b1_no": "Bonus 53", "b1_name": "Tactic Core", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 62", "m_name": "New Year", "m_diff": "★6", "b1_no": "Bonus 55", "b1_name": "Fireworks", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 63", "m_name": "Competition Park", "m_diff": "★6", "b1_no": "Bonus 56", "b1_name": "Game Zone", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 64", "m_name": "Happy", "m_diff": "★6", "b1_no": "Bonus 57", "b1_name": "Rainbow Castle", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 65", "m_name": "The Brazil Carnival", "m_diff": "★3", "b1_no": "Bonus 59", "b1_name": "Samba", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 66", "m_name": "Chronos", "m_diff": "★5", "b1_no": "Bonus 60", "b1_name": "Eternity", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 67", "m_name": "Phantom Thief", "m_diff": "★5", "b1_no": "Bonus 61", "b1_name": "Foggy City", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 68", "m_name": "Enchanted Lamp", "m_diff": "★5", "b1_no": "Bonus 62", "b1_name": "Djinni", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 69", "m_name": "Kingdom War", "m_diff": "★4", "b1_no": "Bonus 63", "b1_name": "Battle Bastion", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 70", "m_name": "Westland", "m_diff": "★4", "b1_no": "Bonus 64", "b1_name": "Desolate Area", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 71", "m_name": "The Wizard of Oz", "m_diff": "★6", "b1_no": "Bonus 65", "b1_name": "Emerald City", "b1_diff": "★5", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 72", "m_name": "Pipeline", "m_diff": "★6", "b1_no": "Bonus 67", "b1_name": "Hub", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 73A\nLevel 73B", "m_name": "Revival\nNirvana", "m_diff": "★3\n★6", "b1_no": "Bonus 66", "b1_name": "Time Machine", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 74", "m_name": "Passionate Love", "m_diff": "★5", "b1_no": "Bonus 68", "b1_name": "Romantic Afternoon", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 75", "m_name": "Canyon Encounters", "m_diff": "★3", "b1_no": "Bonus 69", "b1_name": "Abyss Trap", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 76", "m_name": "Robotoy", "m_diff": "★5", "b1_no": "Bonus 70", "b1_name": "Accumulator", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 77", "m_name": "Chieftain", "m_diff": "★4", "b1_no": "Bonus 71", "b1_name": "Totem", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 78", "m_name": "Amusement Park", "m_diff": "★5", "b1_no": "Bonus 72", "b1_name": "Midnight-Go-Round", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 79", "m_name": "Legendary Racing", "m_diff": "★5", "b1_no": "Bonus 73", "b1_name": "Blazing Tracks", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 80", "m_name": "Industrial Base", "m_diff": "★5", "b1_no": "Bonus 74", "b1_name": "Workshop", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 81", "m_name": "Magic House", "m_diff": "★6", "b1_no": "Bonus 75", "b1_name": "Delusion Circle", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 82", "m_name": "Toy Blocks", "m_diff": "★5", "b1_no": "Bonus 76", "b1_name": "Cubic Craft", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 83", "m_name": "Cthulhu", "m_diff": "★5", "b1_no": "Bonus 77", "b1_name": "Ghroth", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 84", "m_name": "Fission", "m_diff": "★5", "b1_no": "Bonus 78", "b1_name": "Atomic Energy", "b1_diff": "★1", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 85A\nLevel 85B", "m_name": "DelighT-une\nTiMe-mory", "m_diff": "★1\n★6", "b1_no": "Bonus 79", "b1_name": "MotiF-east", "b1_diff": "★6", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 86", "m_name": "Palace Ruins", "m_diff": "★4", "b1_no": "Bonus 80", "b1_name": "Wilderness Aftertaste", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 87", "m_name": "Wasteland Wildsands", "m_diff": "★4", "b1_no": "Bonus 81", "b1_name": "Zone 22", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 88", "m_name": "Red Empire", "m_diff": "★6", "b1_no": "Bonus 82", "b1_name": "Iron Tide", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 89", "m_name": "Sunset Sword Tomb", "m_diff": "★6", "b1_no": "Bonus 84", "b1_name": "Moonlight Swordsman", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 90", "m_name": "Buoyancy Field", "m_diff": "★3", "b1_no": "Bonus 85", "b1_name": "Convection Domain", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 91", "m_name": "Phantom", "m_diff": "★3", "b1_no": "Bonus 86", "b1_name": "Twinkling", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 92", "m_name": "Mirrorworld", "m_diff": "★5", "b1_no": "Bonus 87", "b1_name": "Corridor of Reflections", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 93", "m_name": "Future Stronghold", "m_diff": "★5", "b1_no": "Bonus 88", "b1_name": "Fortification Zero", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 94", "m_name": "Alien Remnants", "m_diff": "★4", "b1_no": "Bonus 89", "b1_name": "Extraterrestrial Duel", "b1_diff": "★6", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 95", "m_name": "Grotesque Playhouse", "m_diff": "★5", "b1_no": "Bonus 90", "b1_name": "Collapsed Stage", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Level 96A\nLevel96B", "m_name": "Departure Prelude\nOur Story Onwards", "m_diff": "★3\n★6", "b1_no": "Bonus 91", "b1_name": "Unending Voyage", "b1_diff": "★5", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Mini Level 1A\nMini Level 1B", "m_name": "Tropical Tides (A)\nTropical Tides (B)", "m_diff": "★1\n★1", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Mini Level 2", "m_name": "Gemini", "m_diff": "★3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Mini Level 3", "m_name": "Forest (A)", "m_diff": "★3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Mini Level 4", "m_name": "Pirate Ship", "m_diff": "★3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Event Level 1", "m_name": "Cloud Fools' Day", "m_diff": "😄1", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Event Level 2", "m_name": "Diamond Craft", "m_diff": "😄3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Event Level 3", "m_name": "sparT ssybA", "m_diff": "😄4", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Event Level 4", "m_name": "Diagonal Cup", "m_diff": "😄6", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 1", "m_name": "Cave", "m_diff": "★6", "b1_no": "Bonus 2", "b1_name": "Earth Core Adventure", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 2", "m_name": "The Chaos", "m_diff": "★6", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 3", "m_name": "Successful Person", "m_diff": "★3", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 4", "m_name": "A Dream of 7 Years", "m_diff": "★6", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 5", "m_name": "Virtual Futuristic Network", "m_diff": "★6", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 6", "m_name": "Eclipse", "m_diff": "★4", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 7", "m_name": "The Breezy Summer", "m_diff": "★5", "b1_no": "Bonus 1", "b1_name": "The Frozen Winter", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Fanmade Level 8", "m_name": "The Basketball", "m_diff": "★5", "b1_no": "", "b1_name": "", "b1_diff": "", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 1", "m_name": "Lab -CONFIDENTIAL-", "m_diff": "★6", "b1_no": "Bonus 1", "b1_name": "Mutation Crisis", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 2", "m_name": "Jungle Expedition", "m_diff": "★5", "b1_no": "Bonus 2", "b1_name": "Tribal Hunting", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 3", "m_name": "Bouncing City", "m_diff": "★5", "b1_no": "Bonus 3", "b1_name": "Lively Spirits", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 4", "m_name": "Melodic Metropolis", "m_diff": "★5", "b1_no": "Bonus 4", "b1_name": "Harmonic Streets", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 5", "m_name": "Musical Theater", "m_diff": "★5", "b1_no": "Bonus 5", "b1_name": "Moonlit Night Movement", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 6", "m_name": "Observatory", "m_diff": "★3", "b1_no": "Bonus 6", "b1_name": "Crescent Moonbeam", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 7", "m_name": "Knit Kingdom", "m_diff": "★6", "b1_no": "Bonus 7", "b1_name": "Sewing Factory", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 8", "m_name": "Nuclear Energy", "m_diff": "★5", "b1_no": "Bonus 8", "b1_name": "Biology Lab", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 9", "m_name": "Parade Pageantry", "m_diff": "★3", "b1_no": "Bonus 9", "b1_name": "Masked Ball", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 10", "m_name": "Disco Tempo", "m_diff": "★4", "b1_no": "Bonus 10", "b1_name": "Beach Party-Rock", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 11", "m_name": "Starlight Desert", "m_diff": "★5", "b1_no": "Bonus 11", "b1_name": "Firefly Valley", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 12", "m_name": "Industrial Age", "m_diff": "★4", "b1_no": "Bonus 12", "b1_name": "Furnace", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 13", "m_name": "Heartbreak", "m_diff": "★2", "b1_no": "Bonus 13", "b1_name": "Out of Control", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 14", "m_name": "Radiant Shadow", "m_diff": "★5", "b1_no": "Bonus 14", "b1_name": "Kaleidoscope", "b1_diff": "★2", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 15", "m_name": "Fruity Paradise", "m_diff": "★5", "b1_no": "Bonus 16", "b1_name": "Sugarfall", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 16", "m_name": "NEWBORN", "m_diff": "★5", "b1_no": "Bonus 15", "b1_name": "Breaking", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 17", "m_name": "Shining Waves", "m_diff": "★4", "b1_no": "Bonus 17", "b1_name": "Sunshine Ocean", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 18", "m_name": "Lighthouse Alley", "m_diff": "★2", "b1_no": "Bonus 19", "b1_name": "Beach Harbour", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 19", "m_name": "Polar Exploration", "m_diff": "★5", "b1_no": "Bonus 18", "b1_name": "Polar Night Wandering", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 20", "m_name": "Twilight Karst Cave", "m_diff": "★4", "b1_no": "Bonus 20", "b1_name": "Akolo-Waltz", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 21", "m_name": "Trailblaze", "m_diff": "★6", "b1_no": "Bonus 21", "b1_name": "Cometbound", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 22", "m_name": "City of Tomorrow", "m_diff": "★6", "b1_no": "Bonus 22", "b1_name": "Celestial Vault", "b1_diff": "★3", "b2_no": "", "b2_name": "", "b2_diff": ""},
+        {"m_no": "Co-creation Level 23", "m_name": "Meow Meow", "m_diff": "★4", "b1_no": "Bonus 23", "b1_name": "Cat Tale", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""}
+    ];
+
+    /* ==========================================================================
+       4. 状態管理＆初期化時の総ステージ数自動集計
+       ========================================================================== */
+    let currentLang = localStorage.getItem('lang') || 'en';
+    const stageElementMap = new Map();
+    const levelsTbody = document.getElementById('levels-tbody');
+
+    const catLabels = {
+        "main": { key: "official_levels", class: "cat-main", id: "all-sec-main" },
+        "mini": { key: "mini_levels", class: "cat-mini", id: "all-sec-mini" },
+        "event": { key: "event_levels", class: "cat-event", id: "all-sec-event" },
+        "fanmade": { key: "fanmade", class: "cat-fanmade", id: "all-sec-fanmade" },
+        "cocreation": { key: "cocreation", class: "cat-cocreation", id: "all-sec-cocreation" }
+    };
+
+    function calculateTotalValidStages() {
+        const uniqueStages = new Set();
+        
+        // By Difficulty の全ステージを収集
+        Object.values(byDifficultyExactData).forEach(catObj => {
+            ['normal', 'plus'].forEach(subKey => {
+                if (catObj[subKey]) {
+                    Object.values(catObj[subKey]).forEach(arr => {
+                        arr.forEach(sName => uniqueStages.add(sName.trim()));
+                    });
+                }
+            });
+        });
+
+        // 削除済みステージを除外
+        let count = 0;
+        uniqueStages.forEach(sName => {
+            if (!deletedStages.has(sName)) {
+                count++;
+            }
+        });
+        totalValidStagesCount = count;
+    }
+
+    function createId(name) {
+        return 'stage-' + name.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-');
+    }
+
+    function formatCellText(text) {
+        return text ? text.split('\n').join('<br>') : "";
+    }
+
+    function formatNameCell(text) {
+        if (!text) return "";
+        return text.split('\n').map(name => {
+            const trimmed = name.trim();
+            if (!trimmed) return "";
+            const id = createId(trimmed);
+            const isCleared = clearedStagesSet.has(trimmed);
+
+            if (deletedStages.has(trimmed)) {
+                return `<del id="${id}">${trimmed}</del><span class="plain-removed">[Removed]</span>`;
+            }
+
+            return `
+                <div class="stage-item stage-item-wrapper-${id} ${isCleared ? 'cleared' : ''}">
+                    <input type="checkbox" class="clear-checkbox" ${isCleared ? 'checked' : ''} onchange="toggleClearStage('${trimmed.replace(/'/g, "\\'")}', this.checked)" title="Clear status">
+                    <strong id="${id}">${trimmed}</strong>
+                </div>
+            `;
+        }).join('<br>');
+    }
+
+    function createStageLinkElement(sName) {
+        const container = document.createElement('div');
+        const stageId = createId(sName);
+        const isCleared = clearedStagesSet.has(sName);
+        
+        container.className = `stage-item stage-item-wrapper-${stageId} ${isCleared ? 'cleared' : ''}`;
+
+        if (deletedStages.has(sName)) {
+            container.innerHTML = `<del>${sName}</del><span class="plain-removed">[Removed]</span>`;
+        } else {
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'clear-checkbox';
+            cb.checked = isCleared;
+            cb.title = "Clear status";
+            cb.onchange = function(e) {
+                toggleClearStage(sName, e.target.checked);
+            };
+
+            const span = document.createElement('span');
+            span.className = 'stage-link';
+            span.innerText = sName;
+            span.onclick = function() { jumpToStage(sName); };
+
+            container.appendChild(cb);
+            container.appendChild(span);
+        }
+        return container;
+    }
+
+    function formatDiffCellWithPlus(namesText, diffsText) {
+        if (!diffsText) return "";
+        const names = namesText ? namesText.split('\n') : [];
+        const diffs = diffsText.split('\n');
+
+        return diffs.map((d, idx) => {
+            let trimmedDiff = d.trim();
+            if (!trimmedDiff) return "";
+            
+            const stageName = (names[idx] || "").trim();
+            if (plusStagesSet.has(stageName) && !trimmedDiff.endsWith('+')) {
+                trimmedDiff += '+';
+            }
+            return `<span class="plain-diff">${trimmedDiff}</span>`;
+        }).join('<br>');
+    }
+
+    function getCategoryType(row) {
+        const mNo = row.m_no || "";
+        if (mNo.startsWith("Mini Level")) return "mini";
+        if (mNo.startsWith("Event Level")) return "event";
+        if (mNo.startsWith("Fanmade Level")) return "fanmade";
+        if (mNo.startsWith("Co-creation Level")) return "cocreation";
+        return "main";
+    }
+
+    /* ==========================================================================
+       5. UI制御ロジック (言語切替・テーマ切替・タブ切り替え)
+       ========================================================================== */
+    function changeLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.setAttribute('data-lang', lang);
+        localStorage.setItem('lang', lang);
+
+        const dict = i18nData[lang] || i18nData['en'];
+
+        document.querySelectorAll('.lang-select').forEach(select => {
+            select.value = lang;
+        });
+
+        document.getElementById('doc-title').innerText = dict.title;
+        document.getElementById('main-title').innerText = dict.title;
+        document.getElementById('tab-btn-by-diff').innerText = dict.by_difficulty;
+        document.getElementById('tab-btn-all').innerText = dict.all_levels;
+        document.getElementById('heading-by-diff').innerText = dict.by_difficulty;
+        document.getElementById('heading-all-levels').innerText = dict.all_levels;
+        document.getElementById('searchInput').placeholder = dict.search_placeholder;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (key === 'nav_by_difficulty') el.innerText = dict.by_difficulty;
+            else if (key === 'nav_all_levels') el.innerText = dict.all_levels;
+            else if (key === 'nav_official_levels' || key === 'diff_official_levels') el.innerText = dict.official_levels;
+            else if (key === 'nav_event_levels' || key === 'diff_event_levels') el.innerText = dict.event_levels;
+            else if (key === 'nav_mini_levels') el.innerText = dict.mini_levels;
+            else if (key === 'nav_fanmade' || key === 'diff_fanmade') el.innerText = dict.fanmade;
+            else if (key === 'nav_cocreation' || key === 'diff_cocreation') el.innerText = dict.cocreation;
+            else if (key === 'col_stage_name') el.innerText = dict.stage_name;
+            else if (key === 'col_difficulty') el.innerText = dict.difficulty;
+            else if (key === 'reset_btn') el.innerText = dict.clear_btn;
+            else if (key === 'clear_checks_btn') el.innerText = dict.clear_checks_btn;
+            else if (key === 'menu_title') el.innerText = dict.menu_title;
+            else if (key === 'language_label') el.innerText = dict.language;
+            else if (key === 'dark_mode_label') el.innerText = dict.dark_mode;
+            else if (key === 'progress_title') el.innerText = dict.progress_title;
+        });
+
+        const catHeaderMap = {
+            "all-sec-main": dict.official_levels, "all-sec-mini": dict.mini_levels,
+            "all-sec-event": dict.event_levels, "all-sec-fanmade": dict.fanmade,
+            "all-sec-cocreation": dict.cocreation
+        };
+
+        for (const [id, label] of Object.entries(catHeaderMap)) {
+            const el = document.getElementById(id);
+            if (el && el.firstElementChild) el.firstElementChild.innerText = label;
+        }
+
+        document.querySelectorAll('.no-stages-cell').forEach(td => td.innerText = dict.no_stages);
+    }
+
+    function updateThemeUI(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        document.querySelectorAll('.theme-toggle-checkbox').forEach(cb => cb.checked = (theme === 'dark'));
+        document.querySelectorAll('.theme-toggle-label').forEach(lbl => lbl.innerText = (theme === 'dark') ? 'Dark' : 'Light');
+    }
+
+    function toggleTheme() {
+        const newTheme = (document.documentElement.getAttribute('data-theme') || 'light') === 'light' ? 'dark' : 'light';
+        localStorage.setItem('theme', newTheme);
+        updateThemeUI(newTheme);
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        if (tabId === 'sec-by-difficulty') document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        else document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        
+        document.getElementById(tabId).classList.add('active');
+    }
+
+    /* ==========================================================================
+       6. ナビゲーションメニュー＆スクロール制御
+       ========================================================================== */
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const drawerNav = document.getElementById('drawerNav');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const backToTopBtn = document.getElementById('backToTopBtn');
+
+    function openNavMenu() { drawerNav.classList.add('active'); menuOverlay.classList.add('active'); }
+    function closeNavMenu() { drawerNav.classList.remove('active'); menuOverlay.classList.remove('active'); }
+
+    menuToggleBtn.addEventListener('click', openNavMenu);
+    closeMenuBtn.addEventListener('click', closeNavMenu);
+    menuOverlay.addEventListener('click', closeNavMenu);
+
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) backToTopBtn.classList.add('show');
+        else backToTopBtn.classList.remove('show');
+    });
+
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    /* ==========================================================================
+       7. テーブルデータ描画処理
+       ========================================================================== */
+    function renderAllLevels() {
+        levelsTbody.innerHTML = '';
+        stageElementMap.clear();
+        let currentCat = null;
+        let pendingRows = [];
+
+        allLevelsMergedRowsData.forEach((dataRow, rowIndex) => {
+            const cat = getCategoryType(dataRow);
+            if (cat !== currentCat) {
+                flushRowGroup(pendingRows);
+                
+                currentCat = cat;
+                const headerRow = document.createElement('tr');
+                headerRow.className = `category-header-row ${catLabels[cat].class}`;
+                headerRow.id = catLabels[cat].id;
+                
+                const headerTd = document.createElement('td');
+                headerTd.colSpan = 9;
+                headerTd.innerText = (i18nData[currentLang] || i18nData['en'])[catLabels[cat].key];
+                headerRow.appendChild(headerTd);
+                levelsTbody.appendChild(headerRow);
+
+                headerRow.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                    let next = this.nextElementSibling;
+                    while (next && !next.classList.contains('category-header-row')) {
+                        next.style.display = this.classList.contains('collapsed') ? 'none' : '';
+                        next = next.nextElementSibling;
+                    }
+                });
+            }
+
+            const tr = document.createElement('tr');
+            tr.dataset.category = cat;
+
+            if (dataRow.m_rowspan !== 0) {
+                flushRowGroup(pendingRows);
+                
+                const mNoTd = document.createElement('td'); if (dataRow.m_rowspan) mNoTd.rowSpan = dataRow.m_rowspan; mNoTd.innerHTML = formatCellText(dataRow.m_no); tr.appendChild(mNoTd);
+                const mNameTd = document.createElement('td'); if (dataRow.m_rowspan) mNameTd.rowSpan = dataRow.m_rowspan; mNameTd.innerHTML = formatNameCell(dataRow.m_name); tr.appendChild(mNameTd);
+                const mDiffTd = document.createElement('td'); if (dataRow.m_rowspan) mDiffTd.rowSpan = dataRow.m_rowspan; mDiffTd.innerHTML = formatDiffCellWithPlus(dataRow.m_name, dataRow.m_diff); tr.appendChild(mDiffTd);
+            }
+
+            const b1NoTd = document.createElement('td'); b1NoTd.innerHTML = formatCellText(dataRow.b1_no); tr.appendChild(b1NoTd);
+            const b1NameTd = document.createElement('td'); b1NameTd.innerHTML = formatNameCell(dataRow.b1_name); tr.appendChild(b1NameTd);
+            const b1DiffTd = document.createElement('td'); b1DiffTd.innerHTML = formatDiffCellWithPlus(dataRow.b1_name, dataRow.b1_diff); tr.appendChild(b1DiffTd);
+            const b2NoTd = document.createElement('td'); b2NoTd.innerHTML = formatCellText(dataRow.b2_no); tr.appendChild(b2NoTd);
+            const b2NameTd = document.createElement('td'); b2NameTd.innerHTML = formatNameCell(dataRow.b2_name); tr.appendChild(b2NameTd);
+            const b2DiffTd = document.createElement('td'); b2DiffTd.innerHTML = formatDiffCellWithPlus(dataRow.b2_name, dataRow.b2_diff); tr.appendChild(b2DiffTd);
+
+            levelsTbody.appendChild(tr);
+            pendingRows.push({ tr, dataRow });
+        });
+        flushRowGroup(pendingRows);
+    }
+
+    function flushRowGroup(rows) {
+        if (!rows || rows.length === 0) return;
+        
+        const groupNames = [];
+        rows.forEach(item => {
+            const allNames = (item.dataRow.m_name + '\n' + item.dataRow.b1_name + '\n' + item.dataRow.b2_name).split('\n');
+            allNames.forEach(n => {
+                const trimmed = n.trim();
+                if (trimmed) groupNames.push(trimmed);
+            });
+        });
+
+        const groupTrs = rows.map(item => item.tr);
+
+        groupNames.forEach(sName => {
+            stageElementMap.set(createId(sName), { trs: groupTrs });
+        });
+
+        rows.length = 0;
+    }
+
+    function renderWithPlusHeaderTable(secData, tbodyId, headerClass = '') {
+        const tbody = document.getElementById(tbodyId);
+        tbody.innerHTML = '';
+        if (!secData) return;
+        const norm = secData.normal || {};
+        const plus = secData.plus || {};
+
+        const maxNormRows = Math.max(...[1,2,3,4,5,6].map(k => (norm[k] || []).length), 0);
+        for (let i = 0; i < maxNormRows; i++) {
+            const tr = document.createElement('tr');
+            for (let col = 1; col <= 6; col++) {
+                const td = document.createElement('td');
+                const sName = (norm[col] || [])[i];
+                if (sName) {
+                    td.appendChild(createStageLinkElement(sName));
+                }
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+
+        const headerTr = document.createElement('tr');
+        for (let col = 1; col <= 6; col++) {
+            const th = document.createElement('th');
+            th.className = `plus-header ${headerClass}`;
+            th.innerText = '★' + col + '+';
+            headerTr.appendChild(th);
+        }
+        tbody.appendChild(headerTr);
+
+        const maxPlusRows = Math.max(...[1,2,3,4,5,6].map(k => (plus[k] || []).length), 0);
+        if (maxPlusRows === 0) {
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 6; td.style.textAlign = 'center'; td.style.color = '#999';
+            td.className = 'no-stages-cell'; td.innerText = (i18nData[currentLang] || i18nData['en']).no_stages;
+            tr.appendChild(td); tbody.appendChild(tr);
+        } else {
+            for (let i = 0; i < maxPlusRows; i++) {
+                const tr = document.createElement('tr');
+                for (let col = 1; col <= 6; col++) {
+                    const td = document.createElement('td');
+                    const sName = (plus[col] || [])[i];
+                    if (sName) {
+                        td.appendChild(createStageLinkElement(sName));
+                    }
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+        }
+    }
+
+    function renderSimpleDiffTable(secData, tbodyId) {
+        const tbody = document.getElementById(tbodyId);
+        tbody.innerHTML = '';
+        if (!secData) return;
+        const norm = secData.normal || {};
+        const maxRows = Math.max(...[1,2,3,4,5,6].map(k => (norm[k] || []).length), 0);
+        for (let i = 0; i < maxRows; i++) {
+            const tr = document.createElement('tr');
+            for (let col = 1; col <= 6; col++) {
+                const td = document.createElement('td');
+                const sName = (norm[col] || [])[i];
+                if (sName) {
+                    td.appendChild(createStageLinkElement(sName));
+                }
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+    }
+
+    /* ==========================================================================
+       8. 検索＆ステージジャンプ機能
+       ========================================================================== */
+    function resetSearch() {
+        document.getElementById('searchInput').value = '';
+        handleSearch();
+    }
+
+    function handleSearch() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+        document.querySelectorAll('.stage-link').forEach(link => {
+            const name = link.innerText.toLowerCase();
+            if (!query || name.includes(query)) {
+                link.style.display = '';
+                if (query && name.includes(query)) link.classList.add('search-match');
+                else link.classList.remove('search-match');
+            } else {
+                link.style.display = 'none';
+                link.classList.remove('search-match');
+            }
+        });
+
+        document.querySelectorAll('#levels-tbody tr').forEach(row => {
+            if (row.classList.contains('category-header-row')) return;
+            const text = row.innerText.toLowerCase();
+            row.style.display = (!query || text.includes(query)) ? '' : 'none';
+        });
+    }
+
+    function jumpToStage(stageName) {
+        switchTab('sec-all-levels');
+
+        document.querySelectorAll('.highlight, .highlight-cell').forEach(el => {
+            el.classList.remove('highlight', 'highlight-cell');
+        });
+
+        const targetId = createId(stageName);
+        const targetInfo = stageElementMap.get(targetId);
+
+        if (targetInfo && targetInfo.trs && targetInfo.trs.length > 0) {
+            let categoryHeader = targetInfo.trs[0].previousElementSibling;
+            while (categoryHeader && !categoryHeader.classList.contains('category-header-row')) {
+                categoryHeader = categoryHeader.previousElementSibling;
+            }
+            if (categoryHeader && categoryHeader.classList.contains('collapsed')) {
+                categoryHeader.click();
+            }
+
+            const specificEl = document.getElementById(targetId);
+            if (specificEl) {
+                const cell = specificEl.closest('td');
+                if (cell) cell.classList.add('highlight-cell');
+            }
+            
+            targetInfo.trs.forEach(tr => {
+                tr.classList.add('highlight');
+            });
+
+            targetInfo.trs[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    /* ==========================================================================
+       9. 初期化処理 (Init)
+       ========================================================================== */
+    updateThemeUI(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    calculateTotalValidStages();
+    renderAllLevels();
+    renderWithPlusHeaderTable(byDifficultyExactData["Official Levels"], 'diff-tbody-main');
+    renderSimpleDiffTable(byDifficultyExactData["Event Levels"], 'diff-tbody-event');
+    renderWithPlusHeaderTable(byDifficultyExactData["Fanmade"], 'diff-tbody-fanmade', 'th-fanmade');
+    renderWithPlusHeaderTable(byDifficultyExactData["Co-creation"], 'diff-tbody-cocreation', 'th-cocreation');
+    changeLanguage(currentLang);
+    updateProgressBar();
+</script>
+
+</body>
+</html>
