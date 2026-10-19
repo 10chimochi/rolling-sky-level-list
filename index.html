@@ -84,7 +84,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 0 0 20px 0;
+            padding: 110px 0 20px 0; /* 固定ヘッダー分の余白を確保 */
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -100,7 +100,7 @@
             border-left: 5px solid #3498db;
             padding-left: 10px;
             margin-top: 0;
-            scroll-margin-top: 20px;
+            scroll-margin-top: 80px;
         }
 
         h3 {
@@ -109,7 +109,7 @@
             margin-bottom: 10px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 5px;
-            scroll-margin-top: 20px;
+            scroll-margin-top: 80px;
         }
 
         /* ==========================================================================
@@ -119,28 +119,56 @@
             background-color: #3498db;
             color: #ffffff;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-            padding: 45px 80px 45px 30px;
-            margin-bottom: 25px;
+            padding: 25px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-sizing: border-box;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .site-header h1 {
             margin: 0;
-            font-size: 36px;
+            font-size: 28px;
             font-weight: bold;
             color: #ffffff;
-            text-align: center;
+            text-align: left;
             flex: 1;
+            transition: font-size 0.3s ease;
         }
 
         .header-controls {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+        }
+
+        /* スクロール時に付与されるスリム化クラス */
+        .site-header.scrolled {
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .site-header.scrolled h1 {
+            font-size: 18px;
+        }
+
+        .site-header.scrolled .menu-toggle-btn {
+            width: 38px;
+            height: 38px;
+        }
+
+        .site-header.scrolled .menu-toggle-btn .menu-icon {
+            font-size: 16px;
+        }
+
+        .site-header.scrolled .menu-toggle-btn .menu-text {
+            font-size: 8px;
         }
 
         /* ==========================================================================
@@ -279,8 +307,8 @@
             position: relative;
             display: inline-flex;
             align-items: center;
-            width: 80px;
-            height: 34px;
+            width: 70px;
+            height: 32px;
             background-color: var(--toggle-bg);
             border-radius: 20px;
             cursor: pointer;
@@ -302,8 +330,8 @@
             position: absolute;
             top: 2px;
             left: 2px;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             background-color: var(--toggle-handle);
             border-radius: 50%;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -313,7 +341,7 @@
         .toggle-label {
             width: 100%;
             text-align: right;
-            padding-right: 10px;
+            padding-right: 8px;
             font-size: 11px;
             font-weight: bold;
             color: var(--toggle-text);
@@ -321,13 +349,13 @@
         }
 
         [data-theme="dark"] .theme-toggle-switch .toggle-slider {
-            transform: translateX(46px);
+            transform: translateX(38px);
         }
 
         [data-theme="dark"] .theme-toggle-switch .toggle-label {
             text-align: left;
             padding-right: 0;
-            padding-left: 10px;
+            padding-left: 8px;
         }
 
         /* ==========================================================================
@@ -386,7 +414,7 @@
             margin-bottom: 30px;
             border-radius: 8px;
             box-shadow: var(--shadow);
-            scroll-margin-top: 20px;
+            scroll-margin-top: 80px;
             transition: background 0.3s ease;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -533,43 +561,40 @@
         }
 
         /* ==========================================================================
-           7. ナビゲーションドロワー & 固定操作ボタン
+           7. ナビゲーションドロワー & ハンバーガーメニューボタン
            ========================================================================== */
         .menu-toggle-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background-color: #2980b9;
+            background-color: rgba(255, 255, 255, 0.2);
             color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            width: 56px;
-            height: 56px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            width: 42px;
+            height: 42px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 2px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, width 0.3s ease, height 0.3s ease;
         }
 
         .menu-toggle-btn .menu-icon {
-            font-size: 20px;
+            font-size: 18px;
             line-height: 1;
+            transition: font-size 0.3s ease;
         }
 
         .menu-toggle-btn .menu-text {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
             letter-spacing: 0.5px;
             line-height: 1;
+            transition: font-size 0.3s ease;
         }
 
         .menu-toggle-btn:hover {
-            background-color: #1a5276;
+            background-color: rgba(255, 255, 255, 0.35);
             transform: scale(1.05);
         }
 
@@ -753,30 +778,52 @@
            ========================================================================== */
         @media (max-width: 768px) {
             .site-header {
-                flex-direction: column;
-                align-items: center;
-                /* スマホ表示時に右側にボタン用の余白（70px）を確保する */
-                padding: 20px 75px 20px 15px;
-                gap: 15px;
+                padding: 15px 15px;
             }
 
             .site-header h1 {
-                font-size: 20px;
-                text-align: center;
+                font-size: 18px;
+            }
+
+            .site-header.scrolled h1 {
+                font-size: 15px;
             }
 
             .header-controls {
-                justify-content: center;
-                width: 100%;
+                gap: 8px;
             }
 
-            /* スマホ時もボタンを画面固定(追従)させつつ、サイズを少しコンパクトにして被りを防止 */
+            .lang-select {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+
+            .toggle-switch {
+                width: 56px;
+                height: 26px;
+            }
+
+            .toggle-slider {
+                width: 20px;
+                height: 20px;
+            }
+
+            [data-theme="dark"] .theme-toggle-switch .toggle-slider {
+                transform: translateX(28px);
+            }
+
+            .toggle-label {
+                font-size: 9px;
+                padding-right: 6px;
+            }
+
+            [data-theme="dark"] .theme-toggle-switch .toggle-label {
+                padding-left: 6px;
+            }
+
             .menu-toggle-btn {
-                position: fixed;
-                top: 15px;
-                right: 15px;
-                width: 48px;
-                height: 48px;
+                width: 38px;
+                height: 38px;
             }
 
             .control-panel {
@@ -804,9 +851,9 @@
 <body>
 
 <!-- ----------------------------------------------------------------------- -->
-<!-- サイトヘッダー                                                           -->
+<!-- サイトヘッダー（固定配置 & スクロール連動スリム化）                     -->
 <!-- ----------------------------------------------------------------------- -->
-<header class="site-header">
+<header class="site-header" id="siteHeader">
     <h1 id="main-title">Rolling Sky Level List</h1>
     <div class="header-controls">
         <select class="lang-select" onchange="changeLanguage(this.value)">
@@ -822,16 +869,18 @@
             <span class="toggle-slider"></span>
             <span class="toggle-label theme-toggle-label">Light</span>
         </label>
+
+        <!-- ハンバーガーメニューボタン（コントロール内・右端に固定） -->
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="メニューを開く">
+            <span class="menu-icon">☰</span>
+            <span class="menu-text">MENU</span>
+        </button>
     </div>
 </header>
 
 <!-- ----------------------------------------------------------------------- -->
-<!-- 固定配置コントロール（メニューボタン＆ページ先頭へボタン）            -->
+<!-- ページ先頭へボタン                                                      -->
 <!-- ----------------------------------------------------------------------- -->
-<button class="menu-toggle-btn" id="menuToggleBtn" aria-label="メニューを開く">
-    <span class="menu-icon">☰</span>
-    <span class="menu-text">MENU</span>
-</button>
 <button class="back-to-top-btn" id="backToTopBtn" aria-label="ページの先頭に戻る" onclick="scrollToTop()">
     <span class="arrow">▲</span>
     <span class="text">TOP</span>
@@ -840,7 +889,7 @@
 <div class="menu-overlay" id="menuOverlay"></div>
 
 <!-- ----------------------------------------------------------------------- -->
-<!-- ハンバーガーメニュー                                               -->
+<!-- ハンバーガーメニュー                                                    -->
 <!-- ----------------------------------------------------------------------- -->
 <nav class="drawer-nav" id="drawerNav">
     <div class="drawer-header">
@@ -1504,6 +1553,7 @@
     const drawerNav = document.getElementById('drawerNav');
     const menuOverlay = document.getElementById('menuOverlay');
     const backToTopBtn = document.getElementById('backToTopBtn');
+    const siteHeader = document.getElementById('siteHeader');
 
     function openNavMenu() { drawerNav.classList.add('active'); menuOverlay.classList.add('active'); }
     function closeNavMenu() { drawerNav.classList.remove('active'); menuOverlay.classList.remove('active'); }
@@ -1513,8 +1563,19 @@
     menuOverlay.addEventListener('click', closeNavMenu);
 
     window.addEventListener('scroll', function() {
-        if (window.scrollY > 300) backToTopBtn.classList.add('show');
-        else backToTopBtn.classList.remove('show');
+        // スクロール時にヘッダーをスリム化
+        if (window.scrollY > 30) {
+            siteHeader.classList.add('scrolled');
+        } else {
+            siteHeader.classList.remove('scrolled');
+        }
+
+        // トップへ戻るボタンの表示切替
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
     });
 
     function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
