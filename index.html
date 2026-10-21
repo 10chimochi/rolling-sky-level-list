@@ -858,6 +858,7 @@
     <div class="header-controls">
         <select class="lang-select" onchange="changeLanguage(this.value)">
             <option value="en">English</option>
+			<option value="es">Español</option>
             <option value="ja">日本語</option>
             <option value="zh-CN">简体中文</option>
             <option value="zh-TW">繁体中文</option>
@@ -917,6 +918,7 @@
         <span data-i18n="language_label">Language</span>
         <select class="lang-select" onchange="changeLanguage(this.value)">
             <option value="en">English</option>
+			<option value="es">Español</option>
             <option value="ja">日本語</option>
             <option value="zh-CN">简体中文</option>
 	    <option value="zh-TW">繁体中文</option>
@@ -1049,8 +1051,17 @@
         en: {
             title: "Rolling Sky Level List", by_difficulty: "By Difficulty", all_levels: "All Levels",
             official_levels: "Official Levels", event_levels: "Event Levels", mini_levels: "Mini Levels",
-            fanmade: "Fanmade", cocreation: "Co-creation", stage_name: "Stage Name", difficulty: "Difficulty",
-            search_placeholder: "Search level name", clear_btn: "Clear Search", clear_checks_btn: "Clear Checks",
+            fanmade: "Fanmade", cocreation: "Co-creation", stage_name: "Level Name", difficulty: "Difficulty",
+            search_placeholder: "Search level name", clear_btn: "Clear Search", clear_checks_btn: "Clear All Checks",
+            menu_title: "Menu", language: "Language", dark_mode: "Dark Mode", no_stages: "（No matching stages）",
+            confirm_clear_all: "Are you sure you want to uncheck all cleared stages?",
+            progress_title: "Total Clear Progress"
+        },
+		es: {
+            title: "Rolling Sky Lista de Niveles", by_difficulty: "Por Dificultad", all_levels: "Todos los Niveles",
+            official_levels: "Niveles Oficiales", event_levels: "Niveles de Evento", mini_levels: "Mini Niveles",
+            fanmade: "Fanmade", cocreation: "Co-creación", stage_name: "Nombre del Nivel", difficulty: "Dificultad",
+            search_placeholder: "Buscar nombre de nivel", clear_btn: "Borrar Búsqueda", clear_checks_btn: "Borrar ",
             menu_title: "Menu", language: "Language", dark_mode: "Dark Mode", no_stages: "（No matching stages）",
             confirm_clear_all: "Are you sure you want to uncheck all cleared stages?",
             progress_title: "Total Clear Progress"
