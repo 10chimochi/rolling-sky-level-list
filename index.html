@@ -84,7 +84,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 130px 0 20px 0; /* 上部の固定ヘッダー分の余白を確保 */
+            padding: 130px 0 20px 0;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -121,13 +121,13 @@
         }
 
         /* ==========================================================================
-           3. ヘッダー (Site Header)
+           3. ヘッダー
            ========================================================================== */
         .site-header {
             background-color: #3498db;
             color: #ffffff;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-            padding: 35px 30px; /* 一番上のときは太め（厚みを持たせる） */
+            padding: 35px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -142,7 +142,7 @@
 
         .site-header h1 {
             margin: 0;
-            font-size: 34px; /* 一番上のときのタイトル文字サイズ */
+            font-size: 34px;
             font-weight: bold;
             color: #ffffff;
             text-align: left;
@@ -975,7 +975,7 @@
             <span class="toggle-label theme-toggle-label">Light</span>
         </label>
 
-        <!-- ハンバーガーメニューボタン（コントロール内・右端に固定） -->
+        <!-- ハンバーガーメニューボタン -->
         <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="メニューを開く">
             <span class="menu-icon">☰</span>
             <span class="menu-text">MENU</span>
@@ -984,7 +984,7 @@
 </header>
 
 <!-- ----------------------------------------------------------------------- -->
-<!-- ページ先頭へボタン                                                      -->
+<!-- ページ先頭ボタン                                                        -->
 <!-- ----------------------------------------------------------------------- -->
 <button class="back-to-top-btn" id="backToTopBtn" aria-label="ページの先頭に戻る" onclick="scrollToTop()">
     <span class="arrow">▲</span>
@@ -1041,7 +1041,7 @@
 </nav>
 
 <!-- ----------------------------------------------------------------------- -->
-<!-- メインコンテンツエリア                                                   -->
+<!-- メインコンテンツエリア                                                  -->
 <!-- ----------------------------------------------------------------------- -->
 <div class="container">
 
@@ -1070,7 +1070,7 @@
         <button class="tab-btn" id="tab-btn-all" onclick="switchTab('sec-all-levels')">All Levels</button>
     </div>
 
-    <!-- TAB 1: 難易度順一覧 (By Difficulty) -->
+    <!-- Tab (By Difficulty) -->
     <div class="tab-content active" id="sec-by-difficulty">
         <div class="table-section">
             <h2 id="heading-by-diff">By Difficulty</h2>
@@ -1118,7 +1118,7 @@
         </div>
     </div>
 
-    <!-- TAB 2: 全ステージ一覧 (All Levels) -->
+    <!-- Tab (All Levels) -->
     <div class="tab-content" id="sec-all-levels">
         <div class="table-section">
             <h2 id="heading-all-levels">All Levels</h2>
@@ -1141,7 +1141,7 @@
         </div>
     </div>
 
-    <!-- ページ一番下に移動したチェック一括解除ボタン -->
+    <!-- チェック一括解除ボタン -->
     <div class="bottom-action-panel">
         <button class="clear-checks-btn" onclick="openConfirmModal()" data-i18n="remove_checks_btn">Remove Checks</button>
     </div>
@@ -1149,7 +1149,7 @@
 </div>
 
 <!-- ----------------------------------------------------------------------- -->
-<!-- カスタム確認ダイアログ (モーダル)                                       -->
+<!-- カスタム確認ダイアログ                                                  -->
 <!-- ----------------------------------------------------------------------- -->
 <div class="modal-overlay" id="confirmModal">
     <div class="modal-card">
@@ -1168,7 +1168,7 @@
 <!-- ----------------------------------------------------------------------- -->
 <script>
     /* ==========================================================================
-       1. 多言語対応（i18n）＆ 定数定義
+       1. 多言語対応
        ========================================================================== */
     const i18nData = {
         en: {
@@ -1236,15 +1236,15 @@
     const deletedStages = new Set(["Alone", "Alone Remix", "Faded", "Faded Remix", "Alone II", "The Spectre", "The Spectre Remix"]);
 
     /* ==========================================================================
-       2. クリア状況（localStorage）の保持・管理ロジック ＆ プログレス更新
+       2. クリア状況の保持 ＆ プログレス更新
        ========================================================================== */
     let clearedStagesSet = new Set(JSON.parse(localStorage.getItem('clearedStages') || '[]'));
-    let totalValidStagesCount = 0; // 全有効ステージ数（動的集計）
+    let totalValidStagesCount = 0;
 
     function updateProgressBar() {
         const total = totalValidStagesCount > 0 ? totalValidStagesCount : 1;
         
-        // 削除済みステージを除外してクリア数をカウント
+        // 削除されたステージを除外してクリア数をカウント
         let clearedValidCount = 0;
         clearedStagesSet.forEach(sName => {
             if (!deletedStages.has(sName)) {
@@ -1290,7 +1290,7 @@
         document.getElementById('confirmModal').classList.remove('active');
     }
 
-    // チェックボックスを一括解除の実行処理
+    // チェックボックス一括解除の実行処理
     function executeRemoveAllChecks() {
         clearedStagesSet.clear();
         localStorage.removeItem('clearedStages');
@@ -1308,8 +1308,9 @@
     }
 
     /* ==========================================================================
-       3. データソース定義 (By Difficulty / All Levels)
+       3. データソース定義
        ========================================================================== */
+　　// 難易度順
     const byDifficultyExactData = {
         "Official Levels": {
             "normal": {
@@ -1343,6 +1344,7 @@
         }
     };
 
+　　// 全ステージ
     const plusStagesSet = new Set();
     Object.values(byDifficultyExactData).forEach(catObj => {
         if (catObj.plus) {
@@ -1493,7 +1495,7 @@
     ];
 
     /* ==========================================================================
-       4. 状態管理＆初期化時の総ステージ数自動集計
+       4. 状態管理 ＆ 初期化時の総ステージ数自動集計
        ========================================================================== */
     let currentLang = localStorage.getItem('lang') || 'en';
     const stageElementMap = new Map();
@@ -1948,7 +1950,7 @@
     }
 
     /* ==========================================================================
-       9. 初期化処理 (Init)
+       9. 初期化処理
        ========================================================================== */
     updateThemeUI(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
     calculateTotalValidStages();
