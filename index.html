@@ -355,7 +355,7 @@
             gap: 15px;
             padding-top: 8px;
             border-top: 1px dashed var(--border-color);
-            font-size: 12px;
+            font-size: 14px;
             color: var(--text-muted);
         }
 
@@ -519,6 +519,42 @@
         th.group-bonus1 { background-color: #8e44ad; }
         th.group-bonus2 { background-color: #d35400; }
 
+        /* 一括チェックボタンのスタイル */
+        .bulk-btn-group {
+            display: inline-flex;
+            gap: 2px;
+            margin-top: 4px;
+            justify-content: center;
+            width: 100%;
+        }
+        .bulk-btn {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .bulk-btn-basic {
+            background: #e8f5e9;
+            color: #27ae60;
+        }
+        .bulk-btn-basic:hover {
+            background: #c8e6c9;
+        }
+        .bulk-btn-perfect {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .bulk-btn-perfect:hover {
+            background: #fde68a;
+        }
+        [data-theme="dark"] .bulk-btn-basic { background: #1b382b; color: #34d399; }
+        [data-theme="dark"] .bulk-btn-basic:hover { background: #224d3a; }
+        [data-theme="dark"] .bulk-btn-perfect { background: #451a03; color: #fbbf24; }
+        [data-theme="dark"] .bulk-btn-perfect:hover { background: #652b04; }
+
         tr.category-header-row td {
             color: #ffffff;
             font-weight: bold;
@@ -566,8 +602,8 @@
         .clear-checkbox {
             cursor: pointer;
             accent-color: #27ae60;
-            width: 13px;
-            height: 13px;
+            width: 15px;
+            height: 15px;
         }
 
         .clear-checkbox.perfect {
@@ -575,10 +611,10 @@
         }
 
         .check-label {
-            font-size: 9px;
+            font-size: 11px;
             font-weight: bold;
-            padding: 1px 3px;
-            border-radius: 3px;
+            padding: 2px 5px;
+            border-radius: 4px;
             line-height: 1;
         }
 
@@ -764,7 +800,7 @@
         }
 
         .drawer-theme-box .lang-select {
-	    bakground-color: var(--card-bg);
+	    background-color: var(--card-bg);
 	    color: var(--text-color);
     	    border: 1px solid var(--input-border);
 	}
@@ -1000,42 +1036,25 @@
             
             <h3 id="diff-sec-main" data-i18n="official_levels">Official Levels</h3>
             <table>
-                <thead>
-                    <tr><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th><th>★6</th></tr>
-                </thead>
+                <thead id="diff-thead-main"></thead>
                 <tbody id="diff-tbody-main"></tbody>
             </table>
 
             <h3 id="diff-sec-event" data-i18n="event_levels">Event Levels</h3>
             <table>
-                <thead>
-                    <tr>
-                        <th class="th-event">😄1</th><th class="th-event">😄2</th><th class="th-event">😄3</th>
-                        <th class="th-event">😄4</th><th class="th-event">😄5</th><th class="th-event">😄6</th>
-                    </tr>
-                </thead>
+                <thead id="diff-thead-event"></thead>
                 <tbody id="diff-tbody-event"></tbody>
             </table>
 
             <h3 id="diff-sec-fanmade" data-i18n="fanmade">Fanmade</h3>
             <table>
-                <thead>
-                    <tr>
-                        <th class="th-fanmade">★1</th><th class="th-fanmade">★2</th><th class="th-fanmade">★3</th>
-                        <th class="th-fanmade">★4</th><th class="th-fanmade">★5</th><th class="th-fanmade">★6</th>
-                    </tr>
-                </thead>
+                <thead id="diff-thead-fanmade"></thead>
                 <tbody id="diff-tbody-fanmade"></tbody>
             </table>
 
             <h3 id="diff-sec-cocreation" data-i18n="cocreation">Co-creation</h3>
             <table>
-                <thead>
-                    <tr>
-                        <th class="th-cocreation">★1</th><th class="th-cocreation">★2</th><th class="th-cocreation">★3</th>
-                        <th class="th-cocreation">★4</th><th class="th-cocreation">★5</th><th class="th-cocreation">★6</th>
-                    </tr>
-                </thead>
+                <thead id="diff-thead-cocreation"></thead>
                 <tbody id="diff-tbody-cocreation"></tbody>
             </table>
         </div>
@@ -1225,6 +1244,65 @@
             wrapper.classList.remove('basic-completed', 'perfect-completed');
             if (isP) wrapper.classList.add('perfect-completed');
             else if (isB) wrapper.classList.add('basic-completed');
+        });
+
+        updateProgressBar();
+        handleSearch();
+    }
+
+    // 難易度列ごとの一括チェック（トグル）機能
+    function bulkToggle(category, subType, col, type) {
+        const catObj = byDifficultyExactData[category];
+        if (!catObj || !catObj[subType]) return;
+        const stages = catObj[subType][col] || [];
+        const validStages = stages.filter(sName => !deletedStages.has(sName.trim()));
+        if (validStages.length === 0) return;
+
+        const allChecked = validStages.every(sName => {
+            const trimmed = sName.trim();
+            if (type === 'basic') return basicCompletedSet.has(trimmed);
+            if (type === 'perfect') return perfectCompletedSet.has(trimmed);
+            return false;
+        });
+
+        const targetState = !allChecked;
+
+        validStages.forEach(sName => {
+            const trimmed = sName.trim();
+            if (type === 'basic') {
+                if (targetState) basicCompletedSet.add(trimmed);
+                else {
+                    basicCompletedSet.delete(trimmed);
+                    perfectCompletedSet.delete(trimmed);
+                }
+                localStorage.setItem('basicCompletedStages', JSON.stringify(Array.from(basicCompletedSet)));
+                localStorage.setItem('perfectCompletedStages', JSON.stringify(Array.from(perfectCompletedSet)));
+            } else if (type === 'perfect') {
+                if (targetState) {
+                    perfectCompletedSet.add(trimmed);
+                    basicCompletedSet.add(trimmed);
+                } else {
+                    perfectCompletedSet.delete(trimmed);
+                }
+                localStorage.setItem('perfectCompletedStages', JSON.stringify(Array.from(perfectCompletedSet)));
+                localStorage.setItem('basicCompletedStages', JSON.stringify(Array.from(basicCompletedSet)));
+            }
+
+            const stageId = createId(trimmed);
+            document.querySelectorAll(`.stage-item-wrapper-${stageId}`).forEach(wrapper => {
+                const basicCb = wrapper.querySelector('.clear-checkbox.basic');
+                const perfectCb = wrapper.querySelector('.clear-checkbox.perfect');
+                
+                const isB = basicCompletedSet.has(trimmed);
+                const isP = perfectCompletedSet.has(trimmed);
+
+                if (basicCb) basicCb.checked = isB;
+                if (perfectCb) perfectCb.checked = isP;
+
+                wrapper.classList.remove('basic-completed', 'perfect-completed');
+                if (isP) wrapper.classList.add('perfect-completed');
+                else if (isB) wrapper.classList.add('basic-completed');
+            });
         });
 
         updateProgressBar();
@@ -1800,10 +1878,30 @@
         rows.length = 0;
     }
 
-    function renderWithPlusHeaderTable(secData, tbodyId, headerClass = '') {
+    function renderDiffTableWithPlus(categoryName, theadId, tbodyId, headerClass = '') {
+        const secData = byDifficultyExactData[categoryName];
+        const thead = document.getElementById(theadId);
         const tbody = document.getElementById(tbodyId);
+        thead.innerHTML = '';
         tbody.innerHTML = '';
         if (!secData) return;
+
+        // Normal Header (★1〜★6)
+        const normTr = document.createElement('tr');
+        for (let col = 1; col <= 6; col++) {
+            const th = document.createElement('th');
+            th.className = headerClass;
+            th.innerHTML = `
+                <div>★${col}</div>
+                <div class="bulk-btn-group">
+                    <button class="bulk-btn bulk-btn-basic" onclick="bulkToggle('${categoryName}', 'normal', ${col}, 'basic')" title="Basic Clear Bulk Toggle">B</button>
+                    <button class="bulk-btn bulk-btn-perfect" onclick="bulkToggle('${categoryName}', 'normal', ${col}, 'perfect')" title="Perfect Clear Bulk Toggle">P</button>
+                </div>
+            `;
+            normTr.appendChild(th);
+        }
+        thead.appendChild(normTr);
+
         const norm = secData.normal || {};
         const plus = secData.plus || {};
 
@@ -1819,11 +1917,18 @@
             tbody.appendChild(tr);
         }
 
+        // Plus Header Row inside tbody
         const headerTr = document.createElement('tr');
         for (let col = 1; col <= 6; col++) {
             const th = document.createElement('th');
             th.className = `plus-header ${headerClass}`;
-            th.innerText = '★' + col + '+';
+            th.innerHTML = `
+                <div>★${col}+</div>
+                <div class="bulk-btn-group">
+                    <button class="bulk-btn bulk-btn-basic" onclick="bulkToggle('${categoryName}', 'plus', ${col}, 'basic')" title="Basic Clear Bulk Toggle">B</button>
+                    <button class="bulk-btn bulk-btn-perfect" onclick="bulkToggle('${categoryName}', 'plus', ${col}, 'perfect')" title="Perfect Clear Bulk Toggle">P</button>
+                </div>
+            `;
             headerTr.appendChild(th);
         }
         tbody.appendChild(headerTr);
@@ -1841,10 +1946,29 @@
         }
     }
 
-    function renderSimpleDiffTable(secData, tbodyId) {
+    function renderSimpleDiffTable(categoryName, theadId, tbodyId, symbol = '★', headerClass = '') {
+        const secData = byDifficultyExactData[categoryName];
+        const thead = document.getElementById(theadId);
         const tbody = document.getElementById(tbodyId);
+        thead.innerHTML = '';
         tbody.innerHTML = '';
         if (!secData) return;
+
+        const normTr = document.createElement('tr');
+        for (let col = 1; col <= 6; col++) {
+            const th = document.createElement('th');
+            th.className = headerClass;
+            th.innerHTML = `
+                <div>${symbol}${col}</div>
+                <div class="bulk-btn-group">
+                    <button class="bulk-btn bulk-btn-basic" onclick="bulkToggle('${categoryName}', 'normal', ${col}, 'basic')" title="Basic Clear Bulk Toggle">B</button>
+                    <button class="bulk-btn bulk-btn-perfect" onclick="bulkToggle('${categoryName}', 'normal', ${col}, 'perfect')" title="Perfect Clear Bulk Toggle">P</button>
+                </div>
+            `;
+            normTr.appendChild(th);
+        }
+        thead.appendChild(normTr);
+
         const norm = secData.normal || {};
         const maxRows = Math.max(...[1,2,3,4,5,6].map(k => (norm[k] || []).length), 0);
         for (let i = 0; i < maxRows; i++) {
@@ -1891,10 +2015,10 @@
 
     calculateTotalValidStages();
     renderAllLevels();
-    renderWithPlusHeaderTable(byDifficultyExactData["Official Levels"], 'diff-tbody-main');
-    renderSimpleDiffTable(byDifficultyExactData["Event Levels"], 'diff-tbody-event');
-    renderWithPlusHeaderTable(byDifficultyExactData["Fanmade"], 'diff-tbody-fanmade', 'th-fanmade');
-    renderWithPlusHeaderTable(byDifficultyExactData["Co-creation"], 'diff-tbody-cocreation', 'th-cocreation');
+    renderDiffTableWithPlus("Official Levels", 'diff-thead-main', 'diff-tbody-main');
+    renderSimpleDiffTable("Event Levels", 'diff-thead-event', 'diff-tbody-event', '😄', 'th-event');
+    renderDiffTableWithPlus("Fanmade", 'diff-thead-fanmade', 'diff-tbody-fanmade', 'th-fanmade');
+    renderDiffTableWithPlus("Co-creation", 'diff-thead-cocreation', 'diff-tbody-cocreation', 'th-cocreation');
     changeLanguage(currentLang);
     updateProgressBar();
 </script>
