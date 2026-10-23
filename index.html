@@ -317,28 +317,34 @@
         }
 
         .progress-bar-track {
-            width: 100%;
+	    width: 100%;
             height: 10px;
             background-color: var(--progress-bg);
             border-radius: 5px;
             overflow: hidden;
-            position: relative;
-            display: flex;
-        }
+    	    position: relative;
+	}
 
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background-color: var(--progress-fill);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+	.progress-bar-fill,
+	.progress-bar-perfect {
+    	    position: absolute;
+    	    top: 0;
+     	    left: 0;
+    	    height: 100%;
+     	    width: 0%;
+    	    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    	    border-radius: 5px;
+	}
 
-        .progress-bar-perfect {
-            height: 100%;
-            width: 0%;
-            background-color: var(--progress-perfect);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+	.progress-bar-fill {
+    	    background-color: var(--progress-fill);
+    	    z-index: 1;
+	}
+
+	.progress-bar-perfect {
+    	    background-color: var(--progress-perfect);
+    	    z-index: 2;
+	}
 
         /* マークの意味説明のスタイル */
         .legend-box {
@@ -890,22 +896,22 @@
     </div>
 
     <ul class="drawer-menu-list">
-        <li><a href="javascript:void(0)" class="nav-parent" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_by_difficulty">By Difficulty</a></li>
-        <li><a href="#diff-sec-main" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_official_levels">Official Levels</a></li>
-        <li><a href="#diff-sec-event" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_event_levels">Event Levels</a></li>
-        <li><a href="#diff-sec-fanmade" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_fanmade">Fanmade</a></li>
-        <li><a href="#diff-sec-cocreation" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="nav_cocreation">Co-creation</a></li>
+        <li><a href="javascript:void(0)" class="nav-parent" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="by_difficulty">By Difficulty</a></li>
+        <li><a href="#diff-sec-main" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="official_levels">Official Levels</a></li>
+        <li><a href="#diff-sec-event" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="event_levels">Event Levels</a></li>
+        <li><a href="#diff-sec-fanmade" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="fanmade">Fanmade</a></li>
+        <li><a href="#diff-sec-cocreation" class="nav-sub" onclick="switchTab('sec-by-difficulty'); closeNavMenu();" data-i18n="cocreation">Co-creation</a></li>
 
-        <li><a href="javascript:void(0)" class="nav-parent" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_all_levels">All Levels</a></li>
-        <li><a href="#all-sec-main" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_official_levels">Official Levels</a></li>
-        <li><a href="#all-sec-mini" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_mini_levels">Mini Levels</a></li>
-        <li><a href="#all-sec-event" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_event_levels">Event Levels</a></li>
-        <li><a href="#all-sec-fanmade" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_fanmade">Fanmade</a></li>
-        <li><a href="#all-sec-cocreation" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_cocreation">Co-creation</a></li>
+        <li><a href="javascript:void(0)" class="nav-parent" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="all_levels">All Levels</a></li>
+        <li><a href="#all-sec-main" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="official_levels">Official Levels</a></li>
+        <li><a href="#all-sec-mini" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="mini_levels">Mini Levels</a></li>
+        <li><a href="#all-sec-event" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="event_levels">Event Levels</a></li>
+        <li><a href="#all-sec-fanmade" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="fanmade">Fanmade</a></li>
+        <li><a href="#all-sec-cocreation" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="cocreation">Co-creation</a></li>
     </ul>
 
     <div class="drawer-theme-box">
-        <span data-i18n="language_label">Language</span>
+        <span data-i18n="language">Language</span>
         <select class="lang-select" onchange="changeLanguage(this.value)" style="color:var(--text-color); background:var(--card-bg);">
             <option value="en">English</option>
             <option value="es">Español</option>
@@ -917,7 +923,7 @@
     </div>
 
     <div class="drawer-theme-box">
-        <span data-i18n="dark_mode_label">Dark Mode</span>
+        <span data-i18n="dark_mode">Dark Mode</span>
         <label class="toggle-switch theme-toggle-switch" title="Theme Switch">
             <input type="checkbox" class="theme-toggle-checkbox" onchange="toggleTheme()">
             <span class="toggle-slider"></span>
@@ -969,8 +975,8 @@
 
     <!-- タブ切り替えボタン -->
     <div class="tab-container">
-        <button class="tab-btn active" id="tab-btn-by-diff" onclick="switchTab('sec-by-difficulty')">By Difficulty</button>
-        <button class="tab-btn" id="tab-btn-all" onclick="switchTab('sec-all-levels')">All Levels</button>
+        <button class="tab-btn active" id="tab-btn-by-diff" onclick="switchTab('sec-by-difficulty')" data-i18n="by_difficulty">By Difficulty</button>
+        <button class="tab-btn" id="tab-btn-all" onclick="switchTab('sec-all-levels')" data-i18n="all_levels">All Levels</button>
     </div>
 
     <!-- Tab (By Difficulty) -->
@@ -978,7 +984,7 @@
         <div class="table-section">
             <h2 id="heading-by-diff">By Difficulty</h2>
             
-            <h3 id="diff-sec-main" data-i18n="diff_official_levels">Official Levels</h3>
+            <h3 id="diff-sec-main" data-i18n="official_levels">Official Levels</h3>
             <table>
                 <thead>
                     <tr><th>★1</th><th>★2</th><th>★3</th><th>★4</th><th>★5</th><th>★6</th></tr>
@@ -986,7 +992,7 @@
                 <tbody id="diff-tbody-main"></tbody>
             </table>
 
-            <h3 id="diff-sec-event" data-i18n="diff_event_levels">Event Levels</h3>
+            <h3 id="diff-sec-event" data-i18n="event_levels">Event Levels</h3>
             <table>
                 <thead>
                     <tr>
@@ -997,7 +1003,7 @@
                 <tbody id="diff-tbody-event"></tbody>
             </table>
 
-            <h3 id="diff-sec-fanmade" data-i18n="diff_fanmade">Fanmade</h3>
+            <h3 id="diff-sec-fanmade" data-i18n="fanmade">Fanmade</h3>
             <table>
                 <thead>
                     <tr>
@@ -1008,7 +1014,7 @@
                 <tbody id="diff-tbody-fanmade"></tbody>
             </table>
 
-            <h3 id="diff-sec-cocreation" data-i18n="diff_cocreation">Co-creation</h3>
+            <h3 id="diff-sec-cocreation" data-i18n="cocreation">Co-creation</h3>
             <table>
                 <thead>
                     <tr>
@@ -1029,14 +1035,14 @@
                 <thead>
                     <tr>
                         <th class="group-main">No</th>
-                        <th class="group-main" data-i18n="col_level_name">Level Name</th>
-                        <th class="group-main" data-i18n="col_difficulty">Difficulty</th>
+                        <th class="group-main" data-i18n="level_name">Level Name</th>
+                        <th class="group-main" data-i18n="difficulty">Difficulty</th>
                         <th class="group-bonus1">Bonus No</th>
-                        <th class="group-bonus1" data-i18n="col_level_name">Level Name</th>
-                        <th class="group-bonus1" data-i18n="col_difficulty">Difficulty</th>
+                        <th class="group-bonus1" data-i18n="level_name">Level Name</th>
+                        <th class="group-bonus1" data-i18n="difficulty">Difficulty</th>
                         <th class="group-bonus2">Bonus No</th>
-                        <th class="group-bonus2" data-i18n="col_level_name">Level Name</th>
-                        <th class="group-bonus2" data-i18n="col_difficulty">Difficulty</th>
+                        <th class="group-bonus2" data-i18n="level_name">Level Name</th>
+                        <th class="group-bonus2" data-i18n="difficulty">Difficulty</th>
                     </tr>
                 </thead>
                 <tbody id="levels-tbody"></tbody>
@@ -1079,7 +1085,7 @@
             progress_title: "Total Completion Progress",
             filter_all: "All Status", filter_uncompleted: "Uncompleted", filter_basic: "Basic Completed", filter_perfect: "Perfect Completed",
             modal_cancel: "Cancel", modal_confirm: "Clear All",
-            legend_basic: "Basic Clear (Stage Complete)", legend_present: "Perfect Clear (All Gems/Crowns)", legend_perfect: "Perfect Clear (All Gems/Crowns)"
+            legend_basic: "Basic Clear (Level Complete)", legend_perfect: "Perfect Clear (All Gems/Crowns)"
         },
         es: {
             title: "Rolling Sky Lista de Niveles", by_difficulty: "Por Dificultad", all_levels: "Todos los Niveles",
@@ -1629,15 +1635,19 @@
         // 各ステージアイテムのフィルタリング
         document.querySelectorAll('.stage-item[data-stage-name]').forEach(wrapper => {
             const name = wrapper.dataset.stageName;
-            const isBasic = wrapper.dataset.isBasic === 'true';
-            const isPerfect = wrapper.dataset.isPerfect === 'true';
+            const isBasic = basicCompletedSet.has(wrapper.dataset.stageOriginalName || wrapper.querySelector('.stage-link')?.innerText.trim());
+            const isPerfect = perfectCompletedSet.has(wrapper.dataset.stageOriginalName || wrapper.querySelector('.stage-link')?.innerText.trim());
 
             const matchesQuery = !query || name.includes(query);
             let matchesStatus = true;
-
-            if (filterStatus === 'uncompleted') matchesStatus = !isBasic;
-            else if (filterStatus === 'basic-completed') matchesStatus = isBasic && !isPerfect;
-            else if (filterStatus === 'perfect-completed') matchesStatus = isPerfect;
+ 
+            if (filterStatus === 'uncompleted') {
+                matchesStatus = !isBasic;
+            } else if (filterStatus === 'basic-completed') {
+                matchesStatus = isBasic && !isPerfect;
+            } else if (filterStatus === 'perfect-completed') {
+                matchesStatus = isPerfect;
+            }
 
             if (matchesQuery && matchesStatus) {
                 wrapper.style.display = '';
