@@ -34,8 +34,9 @@
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
             /* クリア済み行のカラー定義 */
-            --cleared-bg: #e8f5e9;
-            --cleared-text: #2e7d32;
+            --completed-bg: #e8f5e9;
+            --completed-text: #2e7d32;
+            --perfect-text: #d97706;
 
             --toggle-bg: rgba(255, 255, 255, 0.3);
             --toggle-handle: #ffffff;
@@ -44,6 +45,7 @@
             /* プログレスバー用変数 */
             --progress-bg: #e2e8f0;
             --progress-fill: #27ae60;
+            --progress-perfect: #f59e0b;
         }
 
         [data-theme="dark"] {
@@ -65,8 +67,9 @@
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
             /* ダークモード時のクリア済み行カラー */
-            --cleared-bg: #1b382b;
-            --cleared-text: #81c784;
+            --completed-bg: #1b382b;
+            --completed-text: #81c784;
+            --perfect-text: #fbbf24;
 
             --toggle-bg: #1e293b;
             --toggle-handle: #38bdf8;
@@ -74,6 +77,7 @@
 
             --progress-bg: #334155;
             --progress-fill: #34d399;
+            --progress-perfect: #fbbf24;
         }
 
         /* ==========================================================================
@@ -112,12 +116,13 @@
             scroll-margin-top: 90px;
         }
 
-        /* ページ最下部ボタンエリア */
         .bottom-action-panel {
             display: flex;
             justify-content: center;
+            gap: 15px;
             margin-top: 30px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         /* ==========================================================================
@@ -156,7 +161,6 @@
             gap: 12px;
         }
 
-        /* スクロール時に付与されるスリム化クラス */
         .site-header.scrolled {
             padding: 10px 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -166,21 +170,8 @@
             font-size: 18px;
         }
 
-        .site-header.scrolled .menu-toggle-btn {
-            width: 38px;
-            height: 38px;
-        }
-
-        .site-header.scrolled .menu-toggle-btn .menu-icon {
-            font-size: 16px;
-        }
-
-        .site-header.scrolled .menu-toggle-btn .menu-text {
-            font-size: 8px;
-        }
-
         /* ==========================================================================
-           4. コントロールパーツ（検索・ボタン・トグル・プログレスバー）
+           4. コントロールパーツ（検索・フィルター・プログレスバー）
            ========================================================================== */
         .control-panel {
             background: var(--card-bg);
@@ -194,17 +185,24 @@
             gap: 15px;
         }
 
-        .search-box {
+        .search-row {
             display: flex;
             gap: 12px;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .search-box input[type="text"] {
+        .search-input-wrapper {
+            position: relative;
             flex: 1;
-            min-width: 200px;
-            padding: 10px 14px;
+            min-width: 220px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input[type="text"] {
+            width: 100%;
+            padding: 10px 36px 10px 14px;
             font-size: 14px;
             border: 1px solid var(--input-border);
             background-color: var(--card-bg);
@@ -217,6 +215,47 @@
         .search-box input[type="text"]:focus {
             border-color: #3498db;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .search-clear-icon {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .search-clear-icon:hover {
+            color: var(--text-color);
+        }
+
+        .filter-select, .lang-select {
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.3s ease, color 0.3s ease;
+        }
+
+        .lang-select {
+            border-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .lang-select option {
+            background-color: var(--card-bg);
+            color: var(--text-color);
         }
 
         .reset-btn, .clear-checks-btn {
@@ -239,7 +278,7 @@
         .clear-checks-btn {
             background-color: #e74c3c;
             color: #ffffff;
-            padding: 12px 24px;
+            padding: 12px 20px;
             font-size: 14px;
         }
 
@@ -251,8 +290,8 @@
         .progress-widget {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            padding-top: 5px;
+            gap: 8px;
+            padding-top: 10px;
             border-top: 1px dashed var(--border-color);
         }
 
@@ -262,14 +301,19 @@
             align-items: center;
             font-size: 13px;
             font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .progress-title {
             color: var(--header-text);
         }
 
-        .progress-stats {
-            color: var(--text-muted);
+        .progress-stats-group {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            align-items: center;
         }
 
         .progress-bar-track {
@@ -279,37 +323,38 @@
             border-radius: 5px;
             overflow: hidden;
             position: relative;
+            display: flex;
         }
 
         .progress-bar-fill {
             height: 100%;
             width: 0%;
             background-color: var(--progress-fill);
-            border-radius: 5px;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .lang-select {
-            padding: 8px 12px;
-            font-size: 13px;
-            font-weight: bold;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 6px;
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            cursor: pointer;
-            outline: none;
-            transition: border-color 0.2s ease, background 0.3s ease, color 0.3s ease;
+        .progress-bar-perfect {
+            height: 100%;
+            width: 0%;
+            background-color: var(--progress-perfect);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .lang-select:focus {
-            border-color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.25);
+        /* マークの意味説明のスタイル */
+        .legend-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
-        .lang-select option {
-            background-color: var(--card-bg);
-            color: var(--text-color);
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* トグルスイッチ */
@@ -355,7 +400,6 @@
             font-size: 11px;
             font-weight: bold;
             color: var(--toggle-text);
-            transition: all 0.3s ease;
         }
 
         [data-theme="dark"] .theme-toggle-switch .toggle-slider {
@@ -364,12 +408,11 @@
 
         [data-theme="dark"] .theme-toggle-switch .toggle-label {
             text-align: left;
-            padding-right: 0;
             padding-left: 8px;
         }
 
         /* ==========================================================================
-           5. タブ (Tab Container) & アニメーション
+           5. タブ
            ========================================================================== */
         .tab-container {
             display: flex;
@@ -416,7 +459,7 @@
         }
 
         /* ==========================================================================
-           6. テーブル (Table & Grid Styles)
+           6. テーブル
            ========================================================================== */
         .table-section {
             background: var(--card-bg);
@@ -425,9 +468,7 @@
             border-radius: 8px;
             box-shadow: var(--shadow);
             scroll-margin-top: 90px;
-            transition: background 0.3s ease;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -444,7 +485,6 @@
             padding: 8px 10px;
             text-align: left;
             vertical-align: middle;
-            transition: background-color 0.2s ease, border-color 0.3s ease, color 0.2s ease;
             white-space: nowrap;
             line-height: 1.6;
         }
@@ -476,9 +516,7 @@
             font-weight: bold;
             font-size: 14px;
             padding: 12px 14px;
-            text-align: left;
             border-top: 3px solid #2c3e50;
-            letter-spacing: 0.5px;
             cursor: pointer;
             user-select: none;
         }
@@ -486,8 +524,6 @@
         tr.category-header-row td::after {
             content: ' ▼';
             float: right;
-            font-size: 12px;
-            transition: transform 0.2s ease;
         }
 
         tr.category-header-row.collapsed td::after {
@@ -504,25 +540,56 @@
             background-color: var(--table-odd-bg);
         }
 
-        /* クリア状況チェックボックス & クリア完了行のスタイル */
-        .clear-checkbox {
-            margin-right: 6px;
-            cursor: pointer;
-            accent-color: #27ae60;
-            width: 14px;
-            height: 14px;
-            vertical-align: middle;
-        }
-
+        /* ステージ項目・チェックボックス */
         .stage-item {
             display: inline-flex;
             align-items: center;
+            gap: 4px;
+            margin: 2px 0;
         }
 
-        .stage-item.cleared .stage-link,
-        .stage-item.cleared strong {
-            color: var(--cleared-text);
+        .stage-checks {
+            display: inline-flex;
+            gap: 2px;
+            align-items: center;
+            margin-right: 4px;
+        }
+
+        .clear-checkbox {
+            cursor: pointer;
+            accent-color: #27ae60;
+            width: 13px;
+            height: 13px;
+        }
+
+        .clear-checkbox.perfect {
+            accent-color: #f59e0b;
+        }
+
+        .check-label {
+            font-size: 9px;
             font-weight: bold;
+            padding: 1px 3px;
+            border-radius: 3px;
+            line-height: 1;
+        }
+
+        .label-basic { background: #e8f5e9; color: #27ae60; }
+        .label-perfect { background: #fef3c7; color: #d97706; }
+        [data-theme="dark"] .label-basic { background: #1b382b; color: #34d399; }
+        [data-theme="dark"] .label-perfect { background: #451a03; color: #fbbf24; }
+
+        .stage-item.basic-completed .stage-link,
+        .stage-item.basic-completed strong {
+            color: var(--completed-text);
+            font-weight: bold;
+        }
+
+        .stage-item.perfect-completed .stage-link,
+        .stage-item.perfect-completed strong {
+            color: var(--perfect-text);
+            font-weight: bold;
+            text-shadow: 0 0 1px rgba(245, 158, 11, 0.4);
         }
 
         .stage-link {
@@ -530,14 +597,12 @@
             cursor: pointer;
             text-decoration: underline;
             font-weight: 500;
-            display: inline-block;
             padding: 2px 4px;
             border-radius: 3px;
-            transition: color 0.2s ease, background-color 0.2s ease;
+            transition: background-color 0.2s ease;
         }
 
         .stage-link:hover {
-            color: #c0392b;
             background-color: rgba(52, 152, 219, 0.15);
         }
 
@@ -549,7 +614,6 @@
         .plain-removed {
             font-size: 11px;
             color: var(--removed-color);
-            font-weight: normal;
             margin-left: 3px;
         }
 
@@ -571,7 +635,7 @@
         }
 
         /* ==========================================================================
-           7. ナビゲーションドロワー & ハンバーガーメニューボタン
+           7. メニュー & モーダル
            ========================================================================== */
         .menu-toggle-btn {
             background-color: rgba(255, 255, 255, 0.2);
@@ -586,26 +650,6 @@
             align-items: center;
             justify-content: center;
             gap: 2px;
-            transition: background-color 0.3s ease, transform 0.2s ease, width 0.3s ease, height 0.3s ease;
-        }
-
-        .menu-toggle-btn .menu-icon {
-            font-size: 18px;
-            line-height: 1;
-            transition: font-size 0.3s ease;
-        }
-
-        .menu-toggle-btn .menu-text {
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            line-height: 1;
-            transition: font-size 0.3s ease;
-        }
-
-        .menu-toggle-btn:hover {
-            background-color: rgba(255, 255, 255, 0.35);
-            transform: scale(1.05);
         }
 
         .menu-overlay {
@@ -618,7 +662,7 @@
             z-index: 1001;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
         .menu-overlay.active {
@@ -636,7 +680,7 @@
             color: var(--text-color);
             z-index: 1002;
             box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 25px 20px;
             box-sizing: border-box;
             display: flex;
@@ -661,7 +705,6 @@
             margin: 0;
             color: var(--header-text);
             font-size: 18px;
-            font-weight: bold;
         }
 
         .close-btn {
@@ -670,7 +713,6 @@
             font-size: 24px;
             color: var(--text-muted);
             cursor: pointer;
-            line-height: 1;
         }
 
         .drawer-menu-list {
@@ -680,7 +722,6 @@
         }
 
         .drawer-menu-list li {
-            margin: 0;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -690,26 +731,18 @@
             color: var(--text-color);
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.2s ease, padding-left 0.2s ease, background-color 0.2s ease;
         }
 
         .drawer-menu-list a.nav-parent {
-            font-size: 15px;
             font-weight: bold;
             color: var(--header-text);
             background-color: var(--hover-bg);
-            padding: 12px 10px;
         }
 
         .drawer-menu-list a.nav-sub {
             padding-left: 22px;
             color: var(--text-muted);
             font-size: 13px;
-        }
-
-        .drawer-menu-list a:hover {
-            color: #3498db;
-            padding-left: 26px;
         }
 
         .drawer-theme-box {
@@ -719,23 +752,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .drawer-theme-box span {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--header-text);
-        }
-
-        .drawer-theme-box .lang-select {
-            border: 1px solid var(--input-border);
-            background-color: var(--card-bg);
-            color: var(--text-color);
-        }
-
-        .drawer-theme-box .toggle-switch {
-            background-color: var(--input-border);
-            border: none;
         }
 
         .back-to-top-btn {
@@ -757,7 +773,7 @@
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.2s ease, transform 0.2s ease;
+            transition: opacity 0.3s ease;
         }
 
         .back-to-top-btn.show {
@@ -765,27 +781,6 @@
             visibility: visible;
         }
 
-        .back-to-top-btn:hover {
-            background-color: #3498db;
-            transform: scale(1.08);
-        }
-
-        .back-to-top-btn .arrow {
-            font-size: 14px;
-            line-height: 1;
-            margin-bottom: 2px;
-        }
-
-        .back-to-top-btn .text {
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            line-height: 1;
-        }
-
-        /* ==========================================================================
-           8. カスタム確認モーダル (Modal Window)
-           ========================================================================== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -793,14 +788,13 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(2px);
             z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s ease;
+            transition: opacity 0.25s ease;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -818,20 +812,7 @@
             width: 100%;
             max-width: 420px;
             padding: 24px;
-            box-sizing: border-box;
-            transform: scale(0.9);
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-align: center;
-        }
-
-        .modal-overlay.active .modal-card {
-            transform: scale(1);
-        }
-
-        .modal-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
-            line-height: 1;
         }
 
         .modal-message {
@@ -839,7 +820,6 @@
             font-weight: bold;
             color: var(--header-text);
             margin-bottom: 24px;
-            line-height: 1.5;
         }
 
         .modal-actions {
@@ -856,113 +836,27 @@
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease;
         }
 
-        .modal-btn-cancel {
-            background-color: var(--btn-bg);
-            color: var(--btn-text);
-        }
+        .modal-btn-cancel { background-color: var(--btn-bg); color: var(--btn-text); }
+        .modal-btn-confirm { background-color: #e74c3c; color: #ffffff; }
 
-        .modal-btn-cancel:hover {
-            background-color: var(--btn-hover);
-        }
-
-        .modal-btn-confirm {
-            background-color: #e74c3c;
-            color: #ffffff;
-        }
-
-        .modal-btn-confirm:hover {
-            background-color: #c0392b;
-        }
-
-        /* ==========================================================================
-           9. レスポンシブ対応 (Mobile Styles)
-           ========================================================================== */
         @media (max-width: 768px) {
-            .site-header {
-                padding: 20px 15px;
-            }
-
-            .site-header h1 {
-                font-size: 20px;
-            }
-
-            .site-header.scrolled h1 {
-                font-size: 15px;
-            }
-
-            .header-controls {
-                gap: 8px;
-            }
-
-            .lang-select {
-                padding: 6px 8px;
-                font-size: 11px;
-            }
-
-            .toggle-switch {
-                width: 56px;
-                height: 26px;
-            }
-
-            .toggle-slider {
-                width: 20px;
-                height: 20px;
-            }
-
-            [data-theme="dark"] .theme-toggle-switch .toggle-slider {
-                transform: translateX(28px);
-            }
-
-            .toggle-label {
-                font-size: 9px;
-                padding-right: 6px;
-            }
-
-            [data-theme="dark"] .theme-toggle-switch .toggle-label {
-                padding-left: 6px;
-            }
-
-            .menu-toggle-btn {
-                width: 38px;
-                height: 38px;
-            }
-
-            .control-panel {
-                padding: 12px;
-            }
-
-            .tab-btn {
-                padding: 10px 14px;
-                font-size: 13px;
-                flex: 1;
-                text-align: center;
-            }
-
-            .table-section {
-                padding: 12px;
-            }
-
-            th, td {
-                padding: 6px 6px;
-                font-size: 11px;
-            }
+            .site-header { padding: 20px 15px; }
+            .site-header h1 { font-size: 20px; }
+            .tab-btn { padding: 10px 14px; font-size: 13px; flex: 1; text-align: center; }
+            th, td { padding: 6px 6px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ----------------------------------------------------------------------- -->
-<!-- サイトヘッダー（固定配置 & スクロール連動スリム化）                     -->
-<!-- ----------------------------------------------------------------------- -->
 <header class="site-header" id="siteHeader">
     <h1 id="main-title">Rolling Sky Level List</h1>
     <div class="header-controls">
         <select class="lang-select" onchange="changeLanguage(this.value)">
             <option value="en">English</option>
-	    <option value="es">Español</option>
+            <option value="es">Español</option>
             <option value="ja">日本語</option>
             <option value="zh-CN">简体中文</option>
             <option value="zh-TW">繁体中文</option>
@@ -975,27 +869,20 @@
             <span class="toggle-label theme-toggle-label">Light</span>
         </label>
 
-        <!-- ハンバーガーメニューボタン -->
         <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="メニューを開く">
-            <span class="menu-icon">☰</span>
-            <span class="menu-text">MENU</span>
+            <span style="font-size: 18px; line-height: 1;">☰</span>
+            <span style="font-size: 9px; font-weight: bold;">MENU</span>
         </button>
     </div>
 </header>
 
-<!-- ----------------------------------------------------------------------- -->
-<!-- ページ先頭ボタン                                                        -->
-<!-- ----------------------------------------------------------------------- -->
 <button class="back-to-top-btn" id="backToTopBtn" aria-label="ページの先頭に戻る" onclick="scrollToTop()">
-    <span class="arrow">▲</span>
-    <span class="text">TOP</span>
+    <span style="font-size: 14px; line-height: 1; margin-bottom: 2px;">▲</span>
+    <span style="font-size: 9px; font-weight: bold;">TOP</span>
 </button>
 
 <div class="menu-overlay" id="menuOverlay"></div>
 
-<!-- ----------------------------------------------------------------------- -->
-<!-- ハンバーガーメニュー                                                    -->
-<!-- ----------------------------------------------------------------------- -->
 <nav class="drawer-nav" id="drawerNav">
     <div class="drawer-header">
         <h4 data-i18n="menu_title">Menu</h4>
@@ -1017,15 +904,14 @@
         <li><a href="#all-sec-cocreation" class="nav-sub" onclick="switchTab('sec-all-levels'); closeNavMenu();" data-i18n="nav_cocreation">Co-creation</a></li>
     </ul>
 
-    <!-- ドロワー内コントロール -->
     <div class="drawer-theme-box">
         <span data-i18n="language_label">Language</span>
-        <select class="lang-select" onchange="changeLanguage(this.value)">
+        <select class="lang-select" onchange="changeLanguage(this.value)" style="color:var(--text-color); background:var(--card-bg);">
             <option value="en">English</option>
-	    <option value="es">Español</option>
+            <option value="es">Español</option>
             <option value="ja">日本語</option>
             <option value="zh-CN">简体中文</option>
-	    <option value="zh-TW">繁体中文</option>
+            <option value="zh-TW">繁体中文</option>
             <option value="ko">한국어</option>
         </select>
     </div>
@@ -1040,26 +926,43 @@
     </div>
 </nav>
 
-<!-- ----------------------------------------------------------------------- -->
-<!-- メインコンテンツエリア                                                  -->
-<!-- ----------------------------------------------------------------------- -->
 <div class="container">
 
-    <!-- 検索バー ＆ プログレスバー -->
+    <!-- コントロールパネル：検索・フィルタ・プログレス -->
     <div class="control-panel">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search level name..." oninput="handleSearch()">
+        <div class="search-row">
+            <div class="search-box search-input-wrapper">
+                <input type="text" id="searchInput" placeholder="Search level name..." oninput="handleSearch()">
+                <button class="search-clear-icon" id="searchClearBtn" onclick="clearSearchInput()" title="Clear text">&times;</button>
+            </div>
+
             <button class="reset-btn" onclick="resetSearch()" data-i18n="reset_btn">Clear Search</button>
         </div>
 
-        <!-- クリア進捗プログレスバー -->
+        <!-- 進捗プログレスバー & フィルタリングプルダウン -->
         <div class="progress-widget">
             <div class="progress-info">
                 <span class="progress-title" data-i18n="progress_title">Total Clear Progress</span>
-                <span class="progress-stats" id="progressStats">0 / 0 (0%)</span>
+                <div class="progress-stats-group">
+                    <span id="basicProgressStats" style="color: var(--completed-text);">Basic: 0 / 0 (0%)</span>
+                    <span id="perfectProgressStats" style="color: var(--perfect-text);">Perfect: 0 / 0 (0%)</span>
+                    <!-- フィルタリングのプルダウンをプログレスバーの右側に移動 -->
+                    <select id="statusFilter" class="filter-select" onchange="handleSearch()">
+                        <option value="all" data-i18n="filter_all">All Status</option>
+                        <option value="uncompleted" data-i18n="filter_uncompleted">Uncompleted</option>
+                        <option value="basic-completed" data-i18n="filter_basic">Basic Completed</option>
+                        <option value="perfect-completed" data-i18n="filter_perfect">Perfect Completed</option>
+                    </select>
+                </div>
             </div>
             <div class="progress-bar-track">
                 <div class="progress-bar-fill" id="progressBarFill"></div>
+                <div class="progress-bar-perfect" id="progressBarPerfect"></div>
+            </div>
+            <!-- BとPのマークの説明書き -->
+            <div class="legend-box">
+                <div class="legend-item"><span class="check-label label-basic">B</span> : <span data-i18n="legend_basic">Basic Clear (Stage Complete)</span></div>
+                <div class="legend-item"><span class="check-label label-perfect">P</span> : <span data-i18n="legend_perfect">Perfect Clear (All Gems/Crowns)</span></div>
             </div>
         </div>
     </div>
@@ -1071,7 +974,7 @@
     </div>
 
     <!-- Tab (By Difficulty) -->
-    <div class="tab-content active" id="sec-by-difficulty">
+    <div class="tab-content" id="sec-by-difficulty">
         <div class="table-section">
             <h2 id="heading-by-diff">By Difficulty</h2>
             
@@ -1143,14 +1046,12 @@
 
     <!-- チェック一括解除ボタン -->
     <div class="bottom-action-panel">
-        <button class="clear-checks-btn" onclick="openConfirmModal()" data-i18n="remove_checks_btn">Remove Checks</button>
+        <button class="clear-checks-btn" onclick="openConfirmModal()" data-i18n="remove_checks_btn">Remove All Checks</button>
     </div>
 
 </div>
 
-<!-- ----------------------------------------------------------------------- -->
-<!-- カスタム確認ダイアログ                                                  -->
-<!-- ----------------------------------------------------------------------- -->
+<!-- 確認モーダル -->
 <div class="modal-overlay" id="confirmModal">
     <div class="modal-card">
         <div class="modal-message" id="modalMsg" data-i18n="confirm_clear_all">
@@ -1163,126 +1064,155 @@
     </div>
 </div>
 
-<!-- ----------------------------------------------------------------------- -->
-<!-- JavaScript                                                              -->
-<!-- ----------------------------------------------------------------------- -->
 <script>
     /* ==========================================================================
-       1. 多言語対応
+       1. 多言語対応データ
        ========================================================================== */
     const i18nData = {
         en: {
             title: "Rolling Sky Level List", by_difficulty: "By Difficulty", all_levels: "All Levels",
             official_levels: "Official Levels", event_levels: "Event Levels", mini_levels: "Mini Levels",
             fanmade: "Fanmade", cocreation: "Co-creation", level_name: "Level Name", difficulty: "Difficulty",
-            search_placeholder: "Search level name", clear_btn: "Clear Search", remove_checks_btn: "Remove All Checks",
+            search_placeholder: "Search level name...", clear_btn: "Clear Search", remove_checks_btn: "Remove All Checks",
             menu_title: "Menu", language: "Language", dark_mode: "Dark Mode",
             confirm_clear_all: "Are you sure you want to uncheck all completed levels?",
             progress_title: "Total Completion Progress",
-            modal_cancel: "Cancel", modal_confirm: "Clear All"
+            filter_all: "All Status", filter_uncompleted: "Uncompleted", filter_basic: "Basic Completed", filter_perfect: "Perfect Completed",
+            modal_cancel: "Cancel", modal_confirm: "Clear All",
+            legend_basic: "Basic Clear (Stage Complete)", legend_present: "Perfect Clear (All Gems/Crowns)", legend_perfect: "Perfect Clear (All Gems/Crowns)"
         },
-	es: {
+        es: {
             title: "Rolling Sky Lista de Niveles", by_difficulty: "Por Dificultad", all_levels: "Todos los Niveles",
             official_levels: "Niveles Oficiales", event_levels: "Niveles de Evento", mini_levels: "Mini Niveles",
             fanmade: "Fanmade", cocreation: "Co-creación", level_name: "Nombre del Nivel", difficulty: "Dificultad",
-            search_placeholder: "Buscar nombre de nivel", clear_btn: "Borrar Búsqueda", remove_checks_btn: "Quitar Todas las Marcas de Comprobación",
-            menu_title: "Menú", language: "Idioma", dark_mode: "Mode Oscuro",
-            confirm_clear_all: "¿Estás seguro de que quieres desmarcar todos los niveles completados?",
-            progress_title: "Progreso Total de Completación",
-            modal_cancel: "Cancelar", modal_confirm: "Quitar"
+            search_placeholder: "Buscar nombre de nivel...", clear_btn: "Borrar Búsqueda", remove_checks_btn: "Quitar Todas las Marcas",
+            menu_title: "Menú", language: "Idioma", dark_mode: "Modo Oscuro",
+            confirm_clear_all: "¿Estás seguro de que quieres desmarcar todos los niveles?",
+            progress_title: "Progreso Total",
+            filter_all: "Todos los Estados", filter_uncompleted: "No completado", filter_basic: "Básico completado", filter_perfect: "Perfecto completado",
+            modal_cancel: "Cancelar", modal_confirm: "Quitar",
+            legend_basic: "Completado Básico (Nivel completado)", legend_perfect: "Completado Perfecto (Todas las gemas/coronas)"
         },
         ja: {
             title: "ローリングスカイ ステージ一覧", by_difficulty: "難易度順一覧", all_levels: "全一覧",
             official_levels: "公式ステージ", event_levels: "イベントステージ", mini_levels: "ミニステージ",
             fanmade: "ファンメイド", cocreation: "共創", level_name: "ステージ名", difficulty: "難易度",
-            search_placeholder: "ステージ名を入力して検索", clear_btn: "検索クリア", remove_checks_btn: "チェック全解除",
+            search_placeholder: "ステージ名を入力して検索...", clear_btn: "検索クリア", remove_checks_btn: "チェック全解除",
             menu_title: "メニュー", language: "言語", dark_mode: "ダークモード",
             confirm_clear_all: "すべてのクリアチェックを解除しますか？",
             progress_title: "全体クリア進捗",
-            modal_cancel: "キャンセル", modal_confirm: "解除する"
+            filter_all: "すべてのステータス", filter_uncompleted: "未クリア", filter_basic: "基本クリア済", filter_perfect: "パーフェクトクリア済",
+            modal_cancel: "キャンセル", modal_confirm: "解除する",
+            legend_basic: "基本クリア（ステージクリア）", legend_perfect: "パーフェクトクリア（全ジェム・王冠回収）"
         },
         "zh-CN": {
              title: "滚动的天空 关卡目录", by_difficulty: "难度排序", all_levels: "全部关卡",
              official_levels: "官方关卡", event_levels: "活动关卡", mini_levels: "迷你关卡",
              fanmade: "饭製", cocreation: "共创", level_name: "关卡名称", difficulty: "难度",
-             search_placeholder: "输入关卡名称搜索", clear_btn: "清除搜索", remove_checks_btn: "清除所有勾选",
+             search_placeholder: "输入关卡名称搜索...", clear_btn: "清除搜索", remove_checks_btn: "清除所有勾选",
              menu_title: "菜单", language: "语言", dark_mode: "深色模式",
              confirm_clear_all: "确定要取消所有已通关的勾选吗?",
              progress_title: "总通关进度",
-             modal_cancel: "取消", modal_confirm: "确定清除"
+             filter_all: "全部状态", filter_uncompleted: "未通关", filter_basic: "基本已通关", filter_perfect: "完全已通关",
+             modal_cancel: "取消", modal_confirm: "确定清除",
+             legend_basic: "基础通关（关卡完成）", legend_perfect: "完美通关（全部宝石/皇冠）"
         },
         "zh-TW": {
              title: "滾動的天空 關卡目錄", by_difficulty: "難度排序", all_levels: "全部關卡",
              official_levels: "官方關卡", event_levels: "活動關卡", mini_levels: "迷你關卡",
              fanmade: "飯製", cocreation: "共創", level_name: "關卡名稱", difficulty: "難度",
-             search_placeholder: "輸入關卡名稱搜索", clear_btn: "清除搜索", remove_checks_btn: "清除所有勾選",
+             search_placeholder: "輸入關卡名稱搜索...", clear_btn: "清除搜索", remove_checks_btn: "清除所有勾選",
              menu_title: "菜單", language: "語言", dark_mode: "深色模式",
              confirm_clear_all: "確定要取消所有已通關的勾選嗎?",
              progress_title: "總通關進度",
-             modal_cancel: "取消", modal_confirm: "確定清除"
+             filter_all: "全部狀態", filter_uncompleted: "未通關", filter_basic: "基本已通關", filter_perfect: "完全已通關",
+             modal_cancel: "取消", modal_confirm: "確定清除",
+             legend_basic: "基礎通關（關卡完成）", legend_perfect: "完美通關（全部寶石/皇冠）"
         },
         ko: {
              title: "롤링 스카이 스테이지 목록", by_difficulty: "난이도별 목록", all_levels: "전체 목록",
             official_levels: "공식 스테이지", event_levels: "이벤트 스테이지", mini_levels: "미니 스테이지",
             fanmade: "팬메이드", cocreation: "공동 창작", level_name: "스테이지 이름", difficulty: "난이도",
-            search_placeholder: "스테이지 이름 검색", clear_btn: "검색 초기화", remove_checks_btn: "클리어 체크 해제",
+            search_placeholder: "스테이지 이름 검색...", clear_btn: "검색 초기화", remove_checks_btn: "클리어 체크 해제",
             menu_title: "메뉴", language: "언어", dark_mode: "다크 모드",
             confirm_clear_all: "모든 클리어 체크를 해제하시겠습니까?",
             progress_title: "전체 클리어 진행도",
-            modal_cancel: "취소", modal_confirm: "해제"
+            filter_all: "모든 상태", filter_uncompleted: "미클리어", filter_basic: "기본 클리어", filter_perfect: "퍼펙트 클리어",
+            modal_cancel: "취소", modal_confirm: "해제",
+            legend_basic: "기본 클리어 (스테이지 완료)", legend_perfect: "퍼펙트 클리어 (모든 보석/왕관 회수)"
         }
     };
 
     const deletedStages = new Set(["Alone", "Alone Remix", "Faded", "Faded Remix", "Alone II", "The Spectre", "The Spectre Remix"]);
 
     /* ==========================================================================
-       2. クリア状況の保持 ＆ プログレス更新
+       2. データの保持 & プログレス・フィルタ更新
        ========================================================================== */
-    let clearedStagesSet = new Set(JSON.parse(localStorage.getItem('clearedStages') || '[]'));
+    let basicCompletedSet = new Set(JSON.parse(localStorage.getItem('basicCompletedStages') || '[]'));
+    let perfectCompletedSet = new Set(JSON.parse(localStorage.getItem('perfectCompletedStages') || '[]'));
     let totalValidStagesCount = 0;
 
     function updateProgressBar() {
         const total = totalValidStagesCount > 0 ? totalValidStagesCount : 1;
         
-        // 削除されたステージを除外してクリア数をカウント
-        let clearedValidCount = 0;
-        clearedStagesSet.forEach(sName => {
-            if (!deletedStages.has(sName)) {
-                clearedValidCount++;
-            }
-        });
+        let basicValidCount = 0;
+        basicCompletedSet.forEach(sName => { if (!deletedStages.has(sName)) basicValidCount++; });
 
-        const percentage = Math.min(100, Math.max(0, Math.round((clearedValidCount / total) * 100)));
+        let perfectValidCount = 0;
+        perfectCompletedSet.forEach(sName => { if (!deletedStages.has(sName)) perfectValidCount++; });
+
+        const basicPercent = Math.min(100, Math.max(0, Math.round((basicValidCount / total) * 100)));
+        const perfectPercent = Math.min(100, Math.max(0, Math.round((perfectValidCount / total) * 100)));
         
-        document.getElementById('progressBarFill').style.width = percentage + '%';
-        document.getElementById('progressStats').innerText = `${clearedValidCount} / ${total} (${percentage}%)`;
+        document.getElementById('progressBarFill').style.width = basicPercent + '%';
+        document.getElementById('progressBarPerfect').style.width = perfectPercent + '%';
+        
+        const dict = i18nData[currentLang] || i18nData['en'];
+        const basicLabelText = (dict.filter_basic || "Basic").replace(" Completed", "").replace("クリア済", "").replace("已通关", "").replace(" 클리어", "");
+        const perfectLabelText = (dict.filter_perfect || "Perfect").replace(" Completed", "").replace("クリア済", "").replace("已通关", "").replace(" 클리어", "");
+
+        document.getElementById('basicProgressStats').innerText = `${basicLabelText}: ${basicValidCount} / ${total} (${basicPercent}%)`;
+        document.getElementById('perfectProgressStats').innerText = `${perfectLabelText}: ${perfectValidCount} / ${total} (${perfectPercent}%)`;
     }
 
-    function toggleClearStage(stageName, isChecked) {
-        if (isChecked) {
-            clearedStagesSet.add(stageName);
-        } else {
-            clearedStagesSet.delete(stageName);
+    function toggleClearStage(stageName, type, isChecked) {
+        if (type === 'basic') {
+            if (isChecked) basicCompletedSet.add(stageName);
+            else basicCompletedSet.delete(stageName);
+            localStorage.setItem('basicCompletedStages', JSON.stringify(Array.from(basicCompletedSet)));
+        } else if (type === 'perfect') {
+            if (isChecked) {
+                perfectCompletedSet.add(stageName);
+                basicCompletedSet.add(stageName);
+                localStorage.setItem('basicCompletedStages', JSON.stringify(Array.from(basicCompletedSet)));
+            } else {
+                perfectCompletedSet.delete(stageName);
+            }
+            localStorage.setItem('perfectCompletedStages', JSON.stringify(Array.from(perfectCompletedSet)));
         }
-        localStorage.setItem('clearedStages', JSON.stringify(Array.from(clearedStagesSet)));
-        
-        // 同一ステージのすべての要素の表示状態を更新
+
         const stageId = createId(stageName);
         document.querySelectorAll(`.stage-item-wrapper-${stageId}`).forEach(wrapper => {
-            const cb = wrapper.querySelector('.clear-checkbox');
-            if (cb) cb.checked = isChecked;
-            if (isChecked) wrapper.classList.add('cleared');
-            else wrapper.classList.remove('cleared');
+            const basicCb = wrapper.querySelector('.clear-checkbox.basic');
+            const perfectCb = wrapper.querySelector('.clear-checkbox.perfect');
+            
+            const isB = basicCompletedSet.has(stageName);
+            const isP = perfectCompletedSet.has(stageName);
+
+            if (basicCb) basicCb.checked = isB;
+            if (perfectCb) perfectCb.checked = isP;
+
+            wrapper.classList.remove('basic-completed', 'perfect-completed');
+            if (isP) wrapper.classList.add('perfect-completed');
+            else if (isB) wrapper.classList.add('basic-completed');
         });
 
         updateProgressBar();
+        handleSearch();
     }
 
-    /* ==========================================================================
-       モーダル確認ダイアログ制御ロジック
-       ========================================================================== */
     function openConfirmModal() {
-        if (clearedStagesSet.size === 0) return;
+        if (basicCompletedSet.size === 0 && perfectCompletedSet.size === 0) return;
         document.getElementById('confirmModal').classList.add('active');
     }
 
@@ -1290,27 +1220,25 @@
         document.getElementById('confirmModal').classList.remove('active');
     }
 
-    // チェックボックス一括解除の実行処理
     function executeRemoveAllChecks() {
-        clearedStagesSet.clear();
-        localStorage.removeItem('clearedStages');
+        basicCompletedSet.clear();
+        perfectCompletedSet.clear();
+        localStorage.removeItem('basicCompletedStages');
+        localStorage.removeItem('perfectCompletedStages');
 
-        document.querySelectorAll('.clear-checkbox').forEach(cb => {
-            cb.checked = false;
-        });
-
+        document.querySelectorAll('.clear-checkbox').forEach(cb => cb.checked = false);
         document.querySelectorAll('.stage-item').forEach(wrapper => {
-            wrapper.classList.remove('cleared');
+            wrapper.classList.remove('basic-completed', 'perfect-completed');
         });
 
         updateProgressBar();
+        handleSearch();
         closeConfirmModal();
     }
 
     /* ==========================================================================
        3. データソース定義
        ========================================================================== */
-　　// 難易度順
     const byDifficultyExactData = {
         "Official Levels": {
             "normal": {
@@ -1344,13 +1272,10 @@
         }
     };
 
-　　// 全ステージ
     const plusStagesSet = new Set();
     Object.values(byDifficultyExactData).forEach(catObj => {
         if (catObj.plus) {
-            Object.values(catObj.plus).forEach(arr => {
-                arr.forEach(sName => plusStagesSet.add(sName.trim()));
-            });
+            Object.values(catObj.plus).forEach(arr => { arr.forEach(sName => plusStagesSet.add(sName.trim())); });
         }
     });
 
@@ -1494,25 +1419,8 @@
         {"m_no": "Co-creation Level 23", "m_name": "Meow Meow", "m_diff": "★4", "b1_no": "Bonus 23", "b1_name": "Cat Tale", "b1_diff": "★4", "b2_no": "", "b2_name": "", "b2_diff": ""}
     ];
 
-    /* ==========================================================================
-       4. 状態管理 ＆ 初期化時の総ステージ数自動集計
-       ========================================================================== */
-    let currentLang = localStorage.getItem('lang') || 'en';
-    const stageElementMap = new Map();
-    const levelsTbody = document.getElementById('levels-tbody');
-
-    const catLabels = {
-        "main": { key: "official_levels", class: "cat-main", id: "all-sec-main" },
-        "mini": { key: "mini_levels", class: "cat-mini", id: "all-sec-mini" },
-        "event": { key: "event_levels", class: "cat-event", id: "all-sec-event" },
-        "fanmade": { key: "fanmade", class: "cat-fanmade", id: "all-sec-fanmade" },
-        "cocreation": { key: "cocreation", class: "cat-cocreation", id: "all-sec-cocreation" }
-    };
-
     function calculateTotalValidStages() {
         const uniqueStages = new Set();
-        
-        // By Difficulty の全ステージを収集
         Object.values(byDifficultyExactData).forEach(catObj => {
             ['normal', 'plus'].forEach(subKey => {
                 if (catObj[subKey]) {
@@ -1523,13 +1431,8 @@
             });
         });
 
-        // 削除済みステージを除外
         let count = 0;
-        uniqueStages.forEach(sName => {
-            if (!deletedStages.has(sName)) {
-                count++;
-            }
-        });
+        uniqueStages.forEach(sName => { if (!deletedStages.has(sName)) count++; });
         totalValidStagesCount = count;
     }
 
@@ -1541,53 +1444,84 @@
         return text ? text.split('\n').join('<br>') : "";
     }
 
-    function formatNameCell(text) {
-        if (!text) return "";
-        return text.split('\n').map(name => {
-            const trimmed = name.trim();
-            if (!trimmed) return "";
-            const id = createId(trimmed);
-            const isCleared = clearedStagesSet.has(trimmed);
-
-            if (deletedStages.has(trimmed)) {
-                return `<del id="${id}">${trimmed}</del><span class="plain-removed">[Removed]</span>`;
+    function appendStageNamesToCell(cell, namesText) {
+        if (!namesText) return;
+        const names = namesText.split('\n');
+        names.forEach((n, idx) => {
+            const trimmed = n.trim();
+            if (trimmed) {
+                cell.appendChild(createStageLinkElement(trimmed));
             }
-
-            return `
-                <div class="stage-item stage-item-wrapper-${id} ${isCleared ? 'cleared' : ''}">
-                    <input type="checkbox" class="clear-checkbox" ${isCleared ? 'checked' : ''} onchange="toggleClearStage('${trimmed.replace(/'/g, "\\'")}', this.checked)" title="Clear status">
-                    <strong id="${id}">${trimmed}</strong>
-                </div>
-            `;
-        }).join('<br>');
+            if (idx < names.length - 1) {
+                cell.appendChild(document.createElement('br'));
+            }
+        });
     }
 
     function createStageLinkElement(sName) {
         const container = document.createElement('div');
         const stageId = createId(sName);
-        const isCleared = clearedStagesSet.has(sName);
+        const isBasic = basicCompletedSet.has(sName);
+        const isPerfect = perfectCompletedSet.has(sName);
         
-        container.className = `stage-item stage-item-wrapper-${stageId} ${isCleared ? 'cleared' : ''}`;
+        let wrapperClass = 'stage-item ' + `stage-item-wrapper-${stageId} `;
+        if (isPerfect) wrapperClass += 'perfect-completed';
+        else if (isBasic) wrapperClass += 'basic-completed';
+        container.className = wrapperClass;
+        container.dataset.stageName = sName.toLowerCase();
+        container.dataset.isBasic = isBasic ? 'true' : 'false';
+        container.dataset.isPerfect = isPerfect ? 'true' : 'false';
 
         if (deletedStages.has(sName)) {
             container.innerHTML = `<del>${sName}</del><span class="plain-removed">[Removed]</span>`;
         } else {
-            const cb = document.createElement('input');
-            cb.type = 'checkbox';
-            cb.className = 'clear-checkbox';
-            cb.checked = isCleared;
-            cb.title = "Clear status";
-            cb.onchange = function(e) {
-                toggleClearStage(sName, e.target.checked);
-            };
+            const checksSpan = document.createElement('span');
+            checksSpan.className = 'stage-checks';
 
-            const span = document.createElement('span');
-            span.className = 'stage-link';
-            span.innerText = sName;
-            span.onclick = function() { jumpToStage(sName); };
+            // Basic Checkbox
+            const basicLabel = document.createElement('label');
+            basicLabel.className = 'stage-item';
+            basicLabel.style.gap = '1px';
+            const basicCb = document.createElement('input');
+            basicCb.type = 'checkbox';
+            basicCb.className = 'clear-checkbox basic';
+            basicCb.checked = isBasic;
+            basicCb.title = "Basic Clear (Stage Complete)";
+            basicCb.onchange = (e) => toggleClearStage(sName, 'basic', e.target.checked);
+            
+            const basicSpan = document.createElement('span');
+            basicSpan.className = 'check-label label-basic';
+            basicSpan.innerText = 'B';
+            basicLabel.appendChild(basicCb);
+            basicLabel.appendChild(basicSpan);
 
-            container.appendChild(cb);
-            container.appendChild(span);
+            // Perfect Checkbox
+            const perfectLabel = document.createElement('label');
+            perfectLabel.className = 'stage-item';
+            perfectLabel.style.gap = '1px';
+            const perfectCb = document.createElement('input');
+            perfectCb.type = 'checkbox';
+            perfectCb.className = 'clear-checkbox perfect';
+            perfectCb.checked = isPerfect;
+            perfectCb.title = "Perfect Clear (All Gems/Crowns)";
+            perfectCb.onchange = (e) => toggleClearStage(sName, 'perfect', e.target.checked);
+
+            const perfectSpan = document.createElement('span');
+            perfectSpan.className = 'check-label label-perfect';
+            perfectSpan.innerText = 'P';
+            perfectLabel.appendChild(perfectCb);
+            perfectLabel.appendChild(perfectSpan);
+
+            checksSpan.appendChild(basicLabel);
+            checksSpan.appendChild(perfectLabel);
+
+            const linkSpan = document.createElement('span');
+            linkSpan.className = 'stage-link';
+            linkSpan.innerText = sName;
+            linkSpan.onclick = () => jumpToStage(sName);
+
+            container.appendChild(checksSpan);
+            container.appendChild(linkSpan);
         }
         return container;
     }
@@ -1600,7 +1534,6 @@
         return diffs.map((d, idx) => {
             let trimmedDiff = d.trim();
             if (!trimmedDiff) return "";
-            
             const stageName = (names[idx] || "").trim();
             if (plusStagesSet.has(stageName) && !trimmedDiff.endsWith('+')) {
                 trimmedDiff += '+';
@@ -1619,19 +1552,15 @@
     }
 
     /* ==========================================================================
-       5. UI制御ロジック (言語切替・テーマ切替・タブ切り替え)
+       4. UI制御（タブ保持・検索クリア・フィルタ）
        ========================================================================== */
     function changeLanguage(lang) {
         currentLang = lang;
         document.documentElement.setAttribute('data-lang', lang);
         localStorage.setItem('lang', lang);
-
         const dict = i18nData[lang] || i18nData['en'];
 
-        document.querySelectorAll('.lang-select').forEach(select => {
-            select.value = lang;
-        });
-
+        document.querySelectorAll('.lang-select').forEach(s => s.value = lang);
         document.getElementById('doc-title').innerText = dict.title;
         document.getElementById('main-title').innerText = dict.title;
         document.getElementById('tab-btn-by-diff').innerText = dict.by_difficulty;
@@ -1642,38 +1571,10 @@
 
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (key === 'nav_by_difficulty') el.innerText = dict.by_difficulty;
-            else if (key === 'nav_all_levels') el.innerText = dict.all_levels;
-            else if (key === 'nav_official_levels' || key === 'diff_official_levels') el.innerText = dict.official_levels;
-            else if (key === 'nav_event_levels' || key === 'diff_event_levels') el.innerText = dict.event_levels;
-            else if (key === 'nav_mini_levels') el.innerText = dict.mini_levels;
-            else if (key === 'nav_fanmade' || key === 'diff_fanmade') el.innerText = dict.fanmade;
-            else if (key === 'nav_cocreation' || key === 'diff_cocreation') el.innerText = dict.cocreation;
-            else if (key === 'col_level_name') el.innerText = dict.level_name;
-            else if (key === 'col_difficulty') el.innerText = dict.difficulty;
-            else if (key === 'reset_btn') el.innerText = dict.clear_btn;
-            else if (key === 'remove_checks_btn') el.innerText = dict.remove_checks_btn;
-            else if (key === 'menu_title') el.innerText = dict.menu_title;
-            else if (key === 'language_label') el.innerText = dict.language;
-            else if (key === 'dark_mode_label') el.innerText = dict.dark_mode;
-            else if (key === 'progress_title') el.innerText = dict.progress_title;
-            else if (key === 'confirm_clear_all') el.innerText = dict.confirm_clear_all;
-            else if (key === 'modal_cancel') el.innerText = dict.modal_cancel;
-            else if (key === 'modal_confirm') el.innerText = dict.modal_confirm;
+            if (dict[key]) el.innerText = dict[key];
         });
 
-        const catHeaderMap = {
-            "all-sec-main": dict.official_levels, "all-sec-mini": dict.mini_levels,
-            "all-sec-event": dict.event_levels, "all-sec-fanmade": dict.fanmade,
-            "all-sec-cocreation": dict.cocreation
-        };
-
-        for (const [id, label] of Object.entries(catHeaderMap)) {
-            const el = document.getElementById(id);
-            if (el && el.firstElementChild) el.firstElementChild.innerText = label;
-        }
-
-        document.querySelectorAll('.no-stages-cell').forEach(td => td.innerText = dict.no_stages);
+        updateProgressBar();
     }
 
     function updateThemeUI(theme) {
@@ -1688,7 +1589,8 @@
         updateThemeUI(newTheme);
     }
 
-    function switchTab(tabId) {
+    // タブの保持機能
+    function switchTab(tabId, save = true) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
@@ -1696,57 +1598,116 @@
         else document.querySelectorAll('.tab-btn')[1].classList.add('active');
         
         document.getElementById(tabId).classList.add('active');
+        if (save) {
+            localStorage.setItem('activeTab', tabId);
+        }
+    }
+
+    // 検索窓の一括消去機能
+    function clearSearchInput() {
+        const input = document.getElementById('searchInput');
+        input.value = '';
+        handleSearch();
+        input.focus();
+    }
+
+    function resetSearch() {
+        clearSearchInput();
+        document.getElementById('statusFilter').value = 'all';
+        handleSearch();
+    }
+
+    function handleSearch() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const filterStatus = document.getElementById('statusFilter').value;
+        const clearBtn = document.getElementById('searchClearBtn');
+
+        // 消去ボタンの表示制御
+        if (query.length > 0) clearBtn.style.display = 'block';
+        else clearBtn.style.display = 'none';
+
+        // 各ステージアイテムのフィルタリング
+        document.querySelectorAll('.stage-item[data-stage-name]').forEach(wrapper => {
+            const name = wrapper.dataset.stageName;
+            const isBasic = wrapper.dataset.isBasic === 'true';
+            const isPerfect = wrapper.dataset.isPerfect === 'true';
+
+            const matchesQuery = !query || name.includes(query);
+            let matchesStatus = true;
+
+            if (filterStatus === 'uncompleted') matchesStatus = !isBasic;
+            else if (filterStatus === 'basic-completed') matchesStatus = isBasic && !isPerfect;
+            else if (filterStatus === 'perfect-completed') matchesStatus = isPerfect;
+
+            if (matchesQuery && matchesStatus) {
+                wrapper.style.display = '';
+                if (query && name.includes(query)) {
+                    const link = wrapper.querySelector('.stage-link');
+                    if (link) link.classList.add('search-match');
+                }
+            } else {
+                wrapper.style.display = 'none';
+                const link = wrapper.querySelector('.stage-link');
+                if (link) link.classList.remove('search-match');
+            }
+        });
+
+        // テーブル行全体の制御
+        document.querySelectorAll('#levels-tbody tr').forEach(row => {
+            if (row.classList.contains('category-header-row')) return;
+            const text = row.innerText.toLowerCase();
+            row.style.display = (!query || text.includes(query)) ? '' : 'none';
+        });
+    }
+
+    function jumpToStage(stageName) {
+        switchTab('sec-all-levels');
+        document.querySelectorAll('.highlight, .highlight-cell').forEach(el => el.classList.remove('highlight', 'highlight-cell'));
+
+        const targetId = createId(stageName);
+        const targetInfo = stageElementMap.get(targetId);
+
+        if (targetInfo && targetInfo.trs && targetInfo.trs.length > 0) {
+            let categoryHeader = targetInfo.trs[0].previousElementSibling;
+            while (categoryHeader && !categoryHeader.classList.contains('category-header-row')) {
+                categoryHeader = categoryHeader.previousElementSibling;
+            }
+            if (categoryHeader && categoryHeader.classList.contains('collapsed')) categoryHeader.click();
+
+            const specificEl = document.getElementById(targetId);
+            if (specificEl) {
+                const cell = specificEl.closest('td');
+                if (cell) cell.classList.add('highlight-cell');
+            }
+            targetInfo.trs.forEach(tr => tr.classList.add('highlight'));
+            targetInfo.trs[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     }
 
     /* ==========================================================================
-       6. ナビゲーションメニュー＆スクロール制御
+       5. 描画・初期化処理
        ========================================================================== */
-    const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const closeMenuBtn = document.getElementById('closeMenuBtn');
-    const drawerNav = document.getElementById('drawerNav');
-    const menuOverlay = document.getElementById('menuOverlay');
-    const backToTopBtn = document.getElementById('backToTopBtn');
-    const siteHeader = document.getElementById('siteHeader');
+    const stageElementMap = new Map();
+    const levelsTbody = document.getElementById('levels-tbody');
 
-    function openNavMenu() { drawerNav.classList.add('active'); menuOverlay.classList.add('active'); }
-    function closeNavMenu() { drawerNav.classList.remove('active'); menuOverlay.classList.remove('active'); }
+    const catLabels = {
+        "main": { key: "official_levels", class: "cat-main", id: "all-sec-main" },
+        "mini": { key: "mini_levels", class: "cat-mini", id: "all-sec-mini" },
+        "event": { key: "event_levels", class: "cat-event", id: "all-sec-event" },
+        "fanmade": { key: "fanmade", class: "cat-fanmade", id: "all-sec-fanmade" },
+        "cocreation": { key: "cocreation", class: "cat-cocreation", id: "all-sec-cocreation" }
+    };
 
-    menuToggleBtn.addEventListener('click', openNavMenu);
-    closeMenuBtn.addEventListener('click', closeNavMenu);
-    menuOverlay.addEventListener('click', closeNavMenu);
-
-    window.addEventListener('scroll', function() {
-        // スクロール時にヘッダーをスリム化
-        if (window.scrollY > 30) {
-            siteHeader.classList.add('scrolled');
-        } else {
-            siteHeader.classList.remove('scrolled');
-        }
-
-        // トップへ戻るボタンの表示切替
-        if (window.scrollY > 300) {
-            backToTopBtn.classList.add('show');
-        } else {
-            backToTopBtn.classList.remove('show');
-        }
-    });
-
-    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-    /* ==========================================================================
-       7. テーブルデータ描画処理
-       ========================================================================== */
     function renderAllLevels() {
         levelsTbody.innerHTML = '';
         stageElementMap.clear();
         let currentCat = null;
         let pendingRows = [];
 
-        allLevelsMergedRowsData.forEach((dataRow, rowIndex) => {
+        allLevelsMergedRowsData.forEach((dataRow) => {
             const cat = getCategoryType(dataRow);
             if (cat !== currentCat) {
                 flushRowGroup(pendingRows);
-                
                 currentCat = cat;
                 const headerRow = document.createElement('tr');
                 headerRow.className = `category-header-row ${catLabels[cat].class}`;
@@ -1769,21 +1730,32 @@
             }
 
             const tr = document.createElement('tr');
-            tr.dataset.category = cat;
-
             if (dataRow.m_rowspan !== 0) {
                 flushRowGroup(pendingRows);
-                
                 const mNoTd = document.createElement('td'); if (dataRow.m_rowspan) mNoTd.rowSpan = dataRow.m_rowspan; mNoTd.innerHTML = formatCellText(dataRow.m_no); tr.appendChild(mNoTd);
-                const mNameTd = document.createElement('td'); if (dataRow.m_rowspan) mNameTd.rowSpan = dataRow.m_rowspan; mNameTd.innerHTML = formatNameCell(dataRow.m_name); tr.appendChild(mNameTd);
+                
+                const mNameTd = document.createElement('td'); 
+                if (dataRow.m_rowspan) mNameTd.rowSpan = dataRow.m_rowspan; 
+                appendStageNamesToCell(mNameTd, dataRow.m_name);
+                tr.appendChild(mNameTd);
+
                 const mDiffTd = document.createElement('td'); if (dataRow.m_rowspan) mDiffTd.rowSpan = dataRow.m_rowspan; mDiffTd.innerHTML = formatDiffCellWithPlus(dataRow.m_name, dataRow.m_diff); tr.appendChild(mDiffTd);
             }
 
             const b1NoTd = document.createElement('td'); b1NoTd.innerHTML = formatCellText(dataRow.b1_no); tr.appendChild(b1NoTd);
-            const b1NameTd = document.createElement('td'); b1NameTd.innerHTML = formatNameCell(dataRow.b1_name); tr.appendChild(b1NameTd);
+            
+            const b1NameTd = document.createElement('td'); 
+            appendStageNamesToCell(b1NameTd, dataRow.b1_name);
+            tr.appendChild(b1NameTd);
+
             const b1DiffTd = document.createElement('td'); b1DiffTd.innerHTML = formatDiffCellWithPlus(dataRow.b1_name, dataRow.b1_diff); tr.appendChild(b1DiffTd);
+            
             const b2NoTd = document.createElement('td'); b2NoTd.innerHTML = formatCellText(dataRow.b2_no); tr.appendChild(b2NoTd);
-            const b2NameTd = document.createElement('td'); b2NameTd.innerHTML = formatNameCell(dataRow.b2_name); tr.appendChild(b2NameTd);
+            
+            const b2NameTd = document.createElement('td'); 
+            appendStageNamesToCell(b2NameTd, dataRow.b2_name);
+            tr.appendChild(b2NameTd);
+
             const b2DiffTd = document.createElement('td'); b2DiffTd.innerHTML = formatDiffCellWithPlus(dataRow.b2_name, dataRow.b2_diff); tr.appendChild(b2DiffTd);
 
             levelsTbody.appendChild(tr);
@@ -1794,22 +1766,13 @@
 
     function flushRowGroup(rows) {
         if (!rows || rows.length === 0) return;
-        
         const groupNames = [];
         rows.forEach(item => {
             const allNames = (item.dataRow.m_name + '\n' + item.dataRow.b1_name + '\n' + item.dataRow.b2_name).split('\n');
-            allNames.forEach(n => {
-                const trimmed = n.trim();
-                if (trimmed) groupNames.push(trimmed);
-            });
+            allNames.forEach(n => { if (n.trim()) groupNames.push(n.trim()); });
         });
-
         const groupTrs = rows.map(item => item.tr);
-
-        groupNames.forEach(sName => {
-            stageElementMap.set(createId(sName), { trs: groupTrs });
-        });
-
+        groupNames.forEach(sName => stageElementMap.set(createId(sName), { trs: groupTrs }));
         rows.length = 0;
     }
 
@@ -1826,9 +1789,7 @@
             for (let col = 1; col <= 6; col++) {
                 const td = document.createElement('td');
                 const sName = (norm[col] || [])[i];
-                if (sName) {
-                    td.appendChild(createStageLinkElement(sName));
-                }
+                if (sName) td.appendChild(createStageLinkElement(sName));
                 tr.appendChild(td);
             }
             tbody.appendChild(tr);
@@ -1844,25 +1805,15 @@
         tbody.appendChild(headerTr);
 
         const maxPlusRows = Math.max(...[1,2,3,4,5,6].map(k => (plus[k] || []).length), 0);
-        if (maxPlusRows === 0) {
+        for (let i = 0; i < maxPlusRows; i++) {
             const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = 6; td.style.textAlign = 'center'; td.style.color = '#999';
-            td.className = 'no-stages-cell'; td.innerText = (i18nData[currentLang] || i18nData['en']).no_stages;
-            tr.appendChild(td); tbody.appendChild(tr);
-        } else {
-            for (let i = 0; i < maxPlusRows; i++) {
-                const tr = document.createElement('tr');
-                for (let col = 1; col <= 6; col++) {
-                    const td = document.createElement('td');
-                    const sName = (plus[col] || [])[i];
-                    if (sName) {
-                        td.appendChild(createStageLinkElement(sName));
-                    }
-                    tr.appendChild(td);
-                }
-                tbody.appendChild(tr);
+            for (let col = 1; col <= 6; col++) {
+                const td = document.createElement('td');
+                const sName = (plus[col] || [])[i];
+                if (sName) td.appendChild(createStageLinkElement(sName));
+                tr.appendChild(td);
             }
+            tbody.appendChild(tr);
         }
     }
 
@@ -1877,82 +1828,43 @@
             for (let col = 1; col <= 6; col++) {
                 const td = document.createElement('td');
                 const sName = (norm[col] || [])[i];
-                if (sName) {
-                    td.appendChild(createStageLinkElement(sName));
-                }
+                if (sName) td.appendChild(createStageLinkElement(sName));
                 tr.appendChild(td);
             }
             tbody.appendChild(tr);
         }
     }
 
-    /* ==========================================================================
-       8. 検索＆ステージジャンプ機能
-       ========================================================================== */
-    function resetSearch() {
-        document.getElementById('searchInput').value = '';
-        handleSearch();
-    }
-
-    function handleSearch() {
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-
-        document.querySelectorAll('.stage-link').forEach(link => {
-            const name = link.innerText.toLowerCase();
-            if (!query || name.includes(query)) {
-                link.style.display = '';
-                if (query && name.includes(query)) link.classList.add('search-match');
-                else link.classList.remove('search-match');
-            } else {
-                link.style.display = 'none';
-                link.classList.remove('search-match');
-            }
+    // イベントリスナー設定
+    document.getElementById('menuToggleBtn').addEventListener('click', () => {
+        document.getElementById('drawerNav').classList.add('active');
+        document.getElementById('menuOverlay').classList.add('active');
+    });
+    ['closeMenuBtn', 'menuOverlay'].forEach(id => {
+        document.getElementById(id).addEventListener('click', () => {
+            document.getElementById('drawerNav').classList.remove('active');
+            document.getElementById('menuOverlay').classList.remove('active');
         });
+    });
 
-        document.querySelectorAll('#levels-tbody tr').forEach(row => {
-            if (row.classList.contains('category-header-row')) return;
-            const text = row.innerText.toLowerCase();
-            row.style.display = (!query || text.includes(query)) ? '' : 'none';
-        });
-    }
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 30) document.getElementById('siteHeader').classList.add('scrolled');
+        else document.getElementById('siteHeader').classList.remove('scrolled');
 
-    function jumpToStage(stageName) {
-        switchTab('sec-all-levels');
+        if (window.scrollY > 300) document.getElementById('backToTopBtn').classList.add('show');
+        else document.getElementById('backToTopBtn').classList.remove('show');
+    });
 
-        document.querySelectorAll('.highlight, .highlight-cell').forEach(el => {
-            el.classList.remove('highlight', 'highlight-cell');
-        });
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-        const targetId = createId(stageName);
-        const targetInfo = stageElementMap.get(targetId);
-
-        if (targetInfo && targetInfo.trs && targetInfo.trs.length > 0) {
-            let categoryHeader = targetInfo.trs[0].previousElementSibling;
-            while (categoryHeader && !categoryHeader.classList.contains('category-header-row')) {
-                categoryHeader = categoryHeader.previousElementSibling;
-            }
-            if (categoryHeader && categoryHeader.classList.contains('collapsed')) {
-                categoryHeader.click();
-            }
-
-            const specificEl = document.getElementById(targetId);
-            if (specificEl) {
-                const cell = specificEl.closest('td');
-                if (cell) cell.classList.add('highlight-cell');
-            }
-            
-            targetInfo.trs.forEach(tr => {
-                tr.classList.add('highlight');
-            });
-
-            targetInfo.trs[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-
-    /* ==========================================================================
-       9. 初期化処理
-       ========================================================================== */
+    // 初期実行
+    let currentLang = localStorage.getItem('lang') || 'en';
     updateThemeUI(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    
+    // タブの保持復元
+    const savedTab = localStorage.getItem('activeTab') || 'sec-by-difficulty';
+    switchTab(savedTab, false);
+
     calculateTotalValidStages();
     renderAllLevels();
     renderWithPlusHeaderTable(byDifficultyExactData["Official Levels"], 'diff-tbody-main');
